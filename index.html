@@ -35,6 +35,7 @@
 
   <style>
     :root { --themeBg:#a595c8; --mainFont:#3d2b29; }
+
     body{
       background-color:var(--themeBg);
       color:var(--mainFont);
@@ -43,6 +44,7 @@
       user-select:none;
       overflow-x:hidden;
     }
+
     .glass-card{
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(8px);
@@ -84,14 +86,18 @@
     }
 
     /* =========================
-       HOME: Garden (동시 모션)
-       반영사항(요청 그대로):
-       - 뒷줄 새싹: 뒷줄 꽃(translate y=9)보다 위로 2pt -> y=7로 고정
-       - 동시 모션: 1배 느리게(= duration 2배)
-       - 꽃 줄기 맨 아래 잎사귀 추가(첨부 이미지 느낌)
+       HOME Garden
+       - 흙선만 먼저 충분히 노출
+       - 식물 0% 완전 숨김
+       - 스케일/상승이 "한 번에 쭉" (중간 스텝 없음)
        ========================= */
     #garden-wrap{ width:100%; }
     .garden{ width: min(420px, 96vw); height:auto; display:block; }
+
+    .garden{
+      --stemGreen: rgba(46, 98, 74, .86);
+      --baseLeafGreen: rgba(46, 98, 74, .82);
+    }
 
     .garden .soil{
       fill:none;
@@ -100,65 +106,40 @@
       stroke-linecap: round;
     }
 
-    /* 초기 상태: 무조건 숨김(랜덤처럼 보이는 잔상 방지) */
-    .garden .stem, .garden .leaf, .garden .petal, .garden .center, .garden .flowerleaf{
-      opacity:0;
-      transform: translate3d(0, 0, 0);
-      will-change: transform, opacity;
-    }
-
     .garden .stem{
-      stroke: rgba(46, 98, 74, .86);
+      stroke: var(--stemGreen);
       stroke-width: 2.9;
       fill:none;
       stroke-linecap: round;
     }
 
-    .garden .leaf{
-      fill: var(--leaf-color);
-      transform-box: fill-box;
-      transform-origin: center;
+    .garden .leaf{ fill: var(--leaf-color); }
+    .garden .petal{ fill: var(--petal-color); }
+    .garden .center{ fill: rgba(248, 246, 242, .92); }
+    .garden .flowerleaf{ fill: var(--baseLeafGreen); }
+
+    .garden .plant{
+      opacity: 0;
+      transform: translate(var(--x), var(--y)) translateY(28px) scale(0);
+      transform-origin: 0px 150px;
+      will-change: transform, opacity;
     }
 
-    .garden .petal{
-      fill: var(--petal-color);
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-    .garden .center{
-      fill: rgba(248, 246, 242, .92);
-      transform-box: fill-box;
-      transform-origin: center;
+    /* ✅ 흙선만 먼저 보이는 시간 늘림: 1.55s */
+    #garden-wrap.play .garden .plant{
+      animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 1.55s forwards;
     }
 
-    /* 꽃 하단 잎사귀 */
-    .garden .flowerleaf{
-      fill: rgba(58, 118, 88, .80);
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-
-    :root{ --easeSoft: cubic-bezier(0.16, 1, 0.3, 1); }
-
-    /* ✅ 동시 시작 + 1배 느리게(= duration 2배) */
-    #garden-wrap.play .sprout .stem{ animation: riseSoft 3.44s var(--easeSoft) 0s forwards; }
-    #garden-wrap.play .sprout .leaf{ animation: riseSoftSmall 3.12s var(--easeSoft) 0.72s forwards; }
-
-    /* 꽃: 줄기/꽃잎/중심/하단잎 모두 "동시에" 올라오는 느낌 */
-    #garden-wrap.play .flower .stem,
-    #garden-wrap.play .flower .petal,
-    #garden-wrap.play .flower .center,
-    #garden-wrap.play .flower .flowerleaf{
-      animation: riseSoft 3.68s var(--easeSoft) 0s forwards;
-    }
-
-    @keyframes riseSoft{
-      0%   { opacity:0; transform: translate3d(0, 12px, 0); }
-      100% { opacity:1; transform: translate3d(0, 0px, 0); }
-    }
-    @keyframes riseSoftSmall{
-      0%   { opacity:0; transform: translate3d(0, 9px, 0); }
-      100% { opacity:1; transform: translate3d(0, 0px, 0); }
+    /* ✅ 끊김 없는 0→100 단일 곡선 */
+    @keyframes plantRiseSmooth{
+      from{
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) translateY(28px) scale(0);
+      }
+      to{
+        opacity: 1;
+        transform: translate(var(--x), var(--y)) translateY(0px) scale(1);
+      }
     }
   </style>
 <script type="importmap">
@@ -184,14 +165,12 @@
       <section id="screen-intro" class="screen active animate-fade-in items-center relative w-full flex-1">
 
         <!-- 타이틀+슬로건 블록 -->
-        <!-- ✅ 타이틀 위치 3pt(=3px) 밑으로 -->
-        <div class="flex flex-col items-center text-center w-full" style="margin-top: calc(1.5rem + 19px + 3px);">
+        <div class="flex flex-col items-center text-center w-full" style="margin-top: calc(1.5rem + 22px);">
           <h1 class="text-[2.95rem] font-classic font-black text-mainFont tracking-tighter leading-[1.38] title-vivid">
             <span>약속의 말씀</span><br />
             <span class="text-subFont">내 마음에 쏙쏙</span>
           </h1>
 
-          <!-- ✅ 타이틀 제외, 슬로건만 2pt(2px) 더 아래로 -->
           <div class="relative px-4 space-y-3" style="margin-top: calc(2.5rem + 2px);">
             <p class="text-[16px] font-serif font-bold text-mainFont/75 tracking-tight leading-relaxed break-keep">
               "그리스도인의 말씀이 너희 속에 풍성히 거하여"
@@ -201,25 +180,29 @@
         </div>
 
         <!-- HOME Garden -->
-        <!-- ✅ 슬로건-꽃 여백 2pt 줄이기: garden margin-top을 2px 줄임 -->
         <div class="w-full flex justify-center items-center" id="garden-wrap" aria-hidden="true"
              style="margin-top: calc(2.5rem - 6px);">
-          <svg class="garden" viewBox="-30 -25 460 265" aria-hidden="true">
+          <!-- ✅ 가장자리 잘림 방지: viewBox 여유 확대 -->
+          <svg class="garden" viewBox="-60 -40 540 320" aria-hidden="true">
             <!-- 흙선 -->
-            <path class="soil" d="M18 210 C92 184, 146 236, 200 210 C254 184, 316 236, 382 210"></path>
+            <path class="soil" d="M18 214 C92 188, 146 240, 200 214 C254 188, 316 240, 382 214"></path>
 
-            <!-- ===== BACK ROW (10) ===== -->
-            <!-- ✅ 뒷줄 꽃 y=9 유지 / 뒷줄 새싹은 y=7로 통일(=꽃보다 위로 2pt) -->
-
-            <g class="plant sprout" style="--leaf-color:#8FAEA3;" transform="translate(16, 7)">
+            <!-- =========================
+                 BACK ROW (10)
+                 - spacing +3pt 반영: x 간격 확대
+                 - y도 살짝 더 벌림: sprout 3px / flower 7px
+                 ========================= -->
+            <g class="plant sprout" style="--x: 18px; --y: 3px; --leaf-color:rgba(128,168,156,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#AFCFE6;" transform="translate(56, 9)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 63px; --y: 7px; --petal-color:#AFCFE6;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -232,201 +215,223 @@
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#7C9A8D;" transform="translate(96, 7)">
+            <g class="plant sprout" style="--x: 106px; --y: 3px; --leaf-color:rgba(120,160,148,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#C2B4D6;" transform="translate(136, 9)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 151px; --y: 7px; --petal-color:#C2B4D6;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#95A88A;" transform="translate(176, 7)">
+            <g class="plant sprout" style="--x: 194px; --y: 3px; --leaf-color:rgba(138,168,136,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#BFE3D3;" transform="translate(216, 9)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 239px; --y: 7px; --petal-color:#BFE3D3;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#86A39A;" transform="translate(256, 7)">
+            <g class="plant sprout" style="--x: 282px; --y: 3px; --leaf-color:rgba(120,160,148,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#F0B8C6;" transform="translate(296, 9)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 327px; --y: 7px; --petal-color:#F0B8C6;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#93B09A;" transform="translate(336, 7)">
+            <g class="plant sprout" style="--x: 370px; --y: 3px; --leaf-color:rgba(138,176,154,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#E6DFA3;" transform="translate(376, 9)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 415px; --y: 7px; --petal-color:#E6DFA3;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <!-- ===== FRONT ROW (10) ===== -->
-            <g class="plant flower" style="--petal-color:#F2D3A7;" transform="translate(6, 43)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <!-- =========================
+                 FRONT ROW (10)
+                 - spacing +3pt 반영: x 간격 확대
+                 - y 전체 +3px 적용(앞/뒤 간격 더 벌림)
+                 ========================= -->
+            <g class="plant flower" style="--x: 8px; --y: 49px; --petal-color:#F2D3A7;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#7C9A76;" transform="translate(46, 46)">
-              <path class="stem" d="M0 150 L0 106"></path>
-              <ellipse class="leaf" cx="-11" cy="110" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="108" rx="11" ry="6.2"></ellipse>
+            <!-- 앞줄 새싹 높이 약간 줄인 상태 유지 + y +3 -->
+            <g class="plant sprout" style="--x: 53px; --y: 53px; --leaf-color:rgba(124,160,132,.78);">
+              <path class="stem" d="M0 150 L0 112"></path>
+              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
+              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#C7E2C9;" transform="translate(86, 40)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 98px; --y: 47px; --petal-color:#C7E2C9;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#89A7A0;" transform="translate(126, 46)">
-              <path class="stem" d="M0 150 L0 106"></path>
-              <ellipse class="leaf" cx="-11" cy="110" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="108" rx="11" ry="6.2"></ellipse>
+            <g class="plant sprout" style="--x: 143px; --y: 53px; --leaf-color:rgba(138,168,156,.78);">
+              <path class="stem" d="M0 150 L0 112"></path>
+              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
+              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#D7C7F2;" transform="translate(166, 43)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 188px; --y: 50px; --petal-color:#D7C7F2;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#9BB0A4;" transform="translate(206, 46)">
-              <path class="stem" d="M0 150 L0 106"></path>
-              <ellipse class="leaf" cx="-11" cy="110" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="108" rx="11" ry="6.2"></ellipse>
+            <g class="plant sprout" style="--x: 233px; --y: 53px; --leaf-color:rgba(152,176,164,.78);">
+              <path class="stem" d="M0 150 L0 112"></path>
+              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
+              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#E3B5A4;" transform="translate(246, 40)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 278px; --y: 47px; --petal-color:#E3B5A4;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#86A39A;" transform="translate(286, 46)">
-              <path class="stem" d="M0 150 L0 106"></path>
-              <ellipse class="leaf" cx="-11" cy="110" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="108" rx="11" ry="6.2"></ellipse>
+            <g class="plant sprout" style="--x: 323px; --y: 53px; --leaf-color:rgba(120,160,148,.78);">
+              <path class="stem" d="M0 150 L0 112"></path>
+              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
+              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
             </g>
 
-            <g class="plant flower" style="--petal-color:#F0B0D4;" transform="translate(326, 43)">
-              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
-              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
+            <g class="plant flower" style="--x: 368px; --y: 50px; --petal-color:#F0B0D4;">
+              <g transform="translate(0,150)">
+                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
+                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
+              </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#93B09A;" transform="translate(366, 46)">
-              <path class="stem" d="M0 150 L0 106"></path>
-              <ellipse class="leaf" cx="-11" cy="110" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="108" rx="11" ry="6.2"></ellipse>
+            <g class="plant sprout" style="--x: 413px; --y: 53px; --leaf-color:rgba(138,176,154,.78);">
+              <path class="stem" d="M0 150 L0 112"></path>
+              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
+              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
             </g>
           </svg>
         </div>
 
-        <!-- 도전하기 버튼(기존 요구 유지: press UX 유지) -->
-        <!-- (요청에 없어서 이번 턴에서는 버튼 위치는 그대로 둠) -->
-        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(6rem - 9px);">
+        <!-- 도전하기 버튼 -->
+        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(6rem - 12px);">
           <button class="clickable-action clickable-element group glass-card px-12 py-4 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
                   data-next="screen-topics">
             <span class="text-[20px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
