@@ -26,12 +26,8 @@
             classic: ['"Noto Serif KR"', "serif"],
             sans: ["Pretendard", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
           },
-          animation: {
-            "fade-in": "fadeIn 0.6s ease-out forwards",
-          },
-          keyframes: {
-            fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
-          },
+          animation: { "fade-in": "fadeIn 0.6s ease-out forwards" },
+          keyframes: { fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } } },
         },
       },
     };
@@ -89,12 +85,10 @@
 
     /* =========================
        HOME: Garden (동시 모션)
-       - 랜덤/그룹/딜레이 전부 제거
-       - 전체 식물 "동시에" 아래에서 올라오며 부드럽게
-       - 새싹: 줄기 -> 잎 (내부 순서만 유지)
-       - 꽃: 줄기+꽃잎+중심 동시
-       - 타이틀/슬로건 ↔ 식물 여백 -2pt(추가) => 총 -4px 적용
-       - 도전하기 버튼 +2pt 위로(추가)
+       반영사항(요청 그대로):
+       - 뒷줄 새싹: 뒷줄 꽃(translate y=9)보다 위로 2pt -> y=7로 고정
+       - 동시 모션: 1배 느리게(= duration 2배)
+       - 꽃 줄기 맨 아래 잎사귀 추가(첨부 이미지 느낌)
        ========================= */
     #garden-wrap{ width:100%; }
     .garden{ width: min(420px, 96vw); height:auto; display:block; }
@@ -106,10 +100,11 @@
       stroke-linecap: round;
     }
 
-    .garden .stem, .garden .leaf, .garden .petal, .garden .center{
+    /* 초기 상태: 무조건 숨김(랜덤처럼 보이는 잔상 방지) */
+    .garden .stem, .garden .leaf, .garden .petal, .garden .center, .garden .flowerleaf{
       opacity:0;
+      transform: translate3d(0, 0, 0);
       will-change: transform, opacity;
-      transform: translate3d(0,0,0);
     }
 
     .garden .stem{
@@ -124,6 +119,7 @@
       transform-box: fill-box;
       transform-origin: center;
     }
+
     .garden .petal{
       fill: var(--petal-color);
       transform-box: fill-box;
@@ -135,42 +131,42 @@
       transform-origin: center;
     }
 
-    /* 부드러운 이징(툭 끊김 방지) */
-    :root{
-      --easeSoft: cubic-bezier(0.16, 1, 0.3, 1);
+    /* 꽃 하단 잎사귀 */
+    .garden .flowerleaf{
+      fill: rgba(58, 118, 88, .80);
+      transform-box: fill-box;
+      transform-origin: center;
     }
 
-    /* ✅ 동시에 시작 */
-    #garden-wrap.play .sprout .stem{
-      animation: riseSoft 0.86s var(--easeSoft) 0s forwards;
-    }
-    /* 새싹 잎은 줄기 뒤에만 살짝 */
-    #garden-wrap.play .sprout .leaf{
-      animation: riseSoftSmall 0.78s var(--easeSoft) 0.18s forwards;
-    }
+    :root{ --easeSoft: cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* 꽃은 줄기/꽃잎/중심 모두 동시 */
+    /* ✅ 동시 시작 + 1배 느리게(= duration 2배) */
+    #garden-wrap.play .sprout .stem{ animation: riseSoft 3.44s var(--easeSoft) 0s forwards; }
+    #garden-wrap.play .sprout .leaf{ animation: riseSoftSmall 3.12s var(--easeSoft) 0.72s forwards; }
+
+    /* 꽃: 줄기/꽃잎/중심/하단잎 모두 "동시에" 올라오는 느낌 */
     #garden-wrap.play .flower .stem,
     #garden-wrap.play .flower .petal,
-    #garden-wrap.play .flower .center{
-      animation: riseSoft 0.92s var(--easeSoft) 0s forwards;
+    #garden-wrap.play .flower .center,
+    #garden-wrap.play .flower .flowerleaf{
+      animation: riseSoft 3.68s var(--easeSoft) 0s forwards;
     }
 
     @keyframes riseSoft{
-      0%   { opacity:0; transform: translate3d(0, 10px, 0); }
+      0%   { opacity:0; transform: translate3d(0, 12px, 0); }
       100% { opacity:1; transform: translate3d(0, 0px, 0); }
     }
     @keyframes riseSoftSmall{
-      0%   { opacity:0; transform: translate3d(0, 7px, 0); }
+      0%   { opacity:0; transform: translate3d(0, 9px, 0); }
       100% { opacity:1; transform: translate3d(0, 0px, 0); }
     }
   </style>
 <script type="importmap">
 {
   "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
     "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
   }
 }
@@ -188,13 +184,15 @@
       <section id="screen-intro" class="screen active animate-fade-in items-center relative w-full flex-1">
 
         <!-- 타이틀+슬로건 블록 -->
-        <div class="flex flex-col items-center text-center w-full" style="margin-top: calc(1.5rem + 19px);">
+        <!-- ✅ 타이틀 위치 3pt(=3px) 밑으로 -->
+        <div class="flex flex-col items-center text-center w-full" style="margin-top: calc(1.5rem + 19px + 3px);">
           <h1 class="text-[2.95rem] font-classic font-black text-mainFont tracking-tighter leading-[1.38] title-vivid">
             <span>약속의 말씀</span><br />
             <span class="text-subFont">내 마음에 쏙쏙</span>
           </h1>
 
-          <div class="relative px-4 mt-10 space-y-3">
+          <!-- ✅ 타이틀 제외, 슬로건만 2pt(2px) 더 아래로 -->
+          <div class="relative px-4 space-y-3" style="margin-top: calc(2.5rem + 2px);">
             <p class="text-[16px] font-serif font-bold text-mainFont/75 tracking-tight leading-relaxed break-keep">
               "그리스도인의 말씀이 너희 속에 풍성히 거하여"
             </p>
@@ -202,21 +200,26 @@
           </div>
         </div>
 
-        <!-- HOME Garden (타이틀/슬로건과 간격 추가로 -2pt => 총 -4px) -->
-        <div class="w-full flex justify-center items-center mt-10" id="garden-wrap" aria-hidden="true"
-             style="margin-top: calc(2.5rem - 4px);">
+        <!-- HOME Garden -->
+        <!-- ✅ 슬로건-꽃 여백 2pt 줄이기: garden margin-top을 2px 줄임 -->
+        <div class="w-full flex justify-center items-center" id="garden-wrap" aria-hidden="true"
+             style="margin-top: calc(2.5rem - 6px);">
           <svg class="garden" viewBox="-30 -25 460 265" aria-hidden="true">
             <!-- 흙선 -->
             <path class="soil" d="M18 210 C92 184, 146 236, 200 210 C254 184, 316 236, 382 210"></path>
 
             <!-- ===== BACK ROW (10) ===== -->
-            <g class="plant sprout" style="--leaf-color:#8FAEA3;" transform="translate(16, 12)">
+            <!-- ✅ 뒷줄 꽃 y=9 유지 / 뒷줄 새싹은 y=7로 통일(=꽃보다 위로 2pt) -->
+
+            <g class="plant sprout" style="--leaf-color:#8FAEA3;" transform="translate(16, 7)">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
             <g class="plant flower" style="--petal-color:#AFCFE6;" transform="translate(56, 9)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -229,13 +232,15 @@
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#7C9A8D;" transform="translate(96, 15)">
+            <g class="plant sprout" style="--leaf-color:#7C9A8D;" transform="translate(96, 7)">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
             <g class="plant flower" style="--petal-color:#C2B4D6;" transform="translate(136, 9)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -248,13 +253,15 @@
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#95A88A;" transform="translate(176, 16)">
+            <g class="plant sprout" style="--leaf-color:#95A88A;" transform="translate(176, 7)">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
             <g class="plant flower" style="--petal-color:#BFE3D3;" transform="translate(216, 9)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -267,13 +274,15 @@
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#86A39A;" transform="translate(256, 14)">
+            <g class="plant sprout" style="--leaf-color:#86A39A;" transform="translate(256, 7)">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
             <g class="plant flower" style="--petal-color:#F0B8C6;" transform="translate(296, 9)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -286,13 +295,15 @@
               </g>
             </g>
 
-            <g class="plant sprout" style="--leaf-color:#93B09A;" transform="translate(336, 16)">
+            <g class="plant sprout" style="--leaf-color:#93B09A;" transform="translate(336, 7)">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
               <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
             </g>
 
             <g class="plant flower" style="--petal-color:#E6DFA3;" transform="translate(376, 9)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -307,6 +318,8 @@
 
             <!-- ===== FRONT ROW (10) ===== -->
             <g class="plant flower" style="--petal-color:#F2D3A7;" transform="translate(6, 43)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -326,6 +339,8 @@
             </g>
 
             <g class="plant flower" style="--petal-color:#C7E2C9;" transform="translate(86, 40)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -345,6 +360,8 @@
             </g>
 
             <g class="plant flower" style="--petal-color:#D7C7F2;" transform="translate(166, 43)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -364,6 +381,8 @@
             </g>
 
             <g class="plant flower" style="--petal-color:#E3B5A4;" transform="translate(246, 40)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -383,6 +402,8 @@
             </g>
 
             <g class="plant flower" style="--petal-color:#F0B0D4;" transform="translate(326, 43)">
+              <ellipse class="flowerleaf" cx="-10.5" cy="142" rx="16" ry="10" transform="rotate(-18 -10.5 142)"></ellipse>
+              <ellipse class="flowerleaf" cx="10.5"  cy="142" rx="16" ry="10" transform="rotate(18 10.5 142)"></ellipse>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
                 <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
@@ -403,8 +424,9 @@
           </svg>
         </div>
 
-        <!-- Button: 2pt 위로(추가) => 총 -3px -->
-        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(6rem - 3px);">
+        <!-- 도전하기 버튼(기존 요구 유지: press UX 유지) -->
+        <!-- (요청에 없어서 이번 턴에서는 버튼 위치는 그대로 둠) -->
+        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(6rem - 9px);">
           <button class="clickable-action clickable-element group glass-card px-12 py-4 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
                   data-next="screen-topics">
             <span class="text-[20px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
@@ -571,4 +593,3 @@
   </script>
 </body>
 </html>
-
