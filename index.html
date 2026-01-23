@@ -26,8 +26,14 @@
             classic: ['"Noto Serif KR"', "serif"],
             sans: ["Pretendard", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
           },
-          animation: { "fade-in": "fadeIn 0.6s ease-out forwards" },
-          keyframes: { fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } } },
+          animation: {
+            "fade-in": "fadeIn 0.6s ease-out forwards",
+            "slide-up": "slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          },
+          keyframes: {
+            fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+            slideUp: { "0%": { opacity: "0", transform: "translateY(25px)" }, "100%": { opacity: "1", transform: "translateY(0)" } },
+          },
         },
       },
     };
@@ -44,27 +50,44 @@
       user-select:none;
       overflow-x:hidden;
     }
-
-    .glass-card{
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
-      border: 0.5px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 4px 24px -12px rgba(40, 30, 45, 0.1);
-    }
-    .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
-    .break-keep{ word-break: keep-all; }
     ::-webkit-scrollbar{ display:none; }
-
-    .btn-primary{
-      background: linear-gradient(135deg, #433647 0%, #35293b 100%);
-      color:#f2efea;
-      box-shadow: 0 8px 24px -6px rgba(40, 30, 45, 0.4);
-    }
 
     h1,h2,h3{ font-family:"Noto Serif KR", serif; }
     .bible-text{ font-family:"Gowun Batang", serif; }
+    .break-keep{ word-break: keep-all; }
 
-    /* 눌림 UX 유지 */
+    /* ✅ 공통 Glass Card (알파 0.15 / 블러 15px) */
+    .glass-card{
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 0.5px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 24px -12px rgba(40, 30, 45, 0.10);
+    }
+
+    .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
+
+    /* ✅ 퀴즈 시작 버튼: 유리감 유지 + 틴트(색) 무게만 증가 */
+    .btn-primary{
+      /* 더 진한 틴트 컬러(한 톤 깊게) + 투명도는 0.26 유지 */
+      background: linear-gradient(
+        135deg,
+        rgba(102, 86, 78, 0.26) 0%,
+        rgba(102, 86, 78, 0.18) 100%
+      );
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      box-shadow:
+        0 10px 22px -18px rgba(40, 30, 45, 0.26),
+        0 10px 22px rgba(102, 86, 78, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.22);
+
+      color: rgba(61, 43, 41, 0.92); /* mainFont 계열 */
+    }
+
+    /* [핵심] 눌림(Press) 상태 스타일 */
     .is-pressing{
       transform: translateY(1px) scale(0.985) !important;
       filter: brightness(0.96) !important;
@@ -86,10 +109,7 @@
     }
 
     /* =========================
-       HOME Garden
-       - 흙선만 먼저 충분히 노출
-       - 식물 0% 완전 숨김
-       - 스케일/상승이 "한 번에 쭉" (중간 스텝 없음)
+       HOME Garden (식물 애니메이션)
        ========================= */
     #garden-wrap{ width:100%; }
     .garden{ width: min(420px, 96vw); height:auto; display:block; }
@@ -125,12 +145,11 @@
       will-change: transform, opacity;
     }
 
-    /* ✅ 흙선만 먼저 보이는 시간 늘림: 1.55s */
+    /* 흙선만 먼저 보이는 시간 */
     #garden-wrap.play .garden .plant{
       animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 1.55s forwards;
     }
 
-    /* ✅ 끊김 없는 0→100 단일 곡선 */
     @keyframes plantRiseSmooth{
       from{
         opacity: 0;
@@ -148,7 +167,7 @@
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
   }
 }
 </script>
@@ -156,6 +175,7 @@
 
 <body class="font-sans">
   <div id="app-container" class="min-h-screen w-full flex flex-col items-center relative">
+    <!-- Decoration -->
     <div class="absolute inset-0 opacity-[0.05] pointer-events-none"
          style="background-image: radial-gradient(#432d4c 1px, transparent 1px); background-size: 32px 32px;"></div>
 
@@ -182,16 +202,11 @@
         <!-- HOME Garden -->
         <div class="w-full flex justify-center items-center" id="garden-wrap" aria-hidden="true"
              style="margin-top: calc(2.5rem - 6px);">
-          <!-- ✅ 가장자리 잘림 방지: viewBox 여유 확대 -->
           <svg class="garden" viewBox="-60 -40 540 320" aria-hidden="true">
             <!-- 흙선 -->
             <path class="soil" d="M18 214 C92 188, 146 240, 200 214 C254 188, 316 240, 382 214"></path>
 
-            <!-- =========================
-                 BACK ROW (10)
-                 - spacing +3pt 반영: x 간격 확대
-                 - y도 살짝 더 벌림: sprout 3px / flower 7px
-                 ========================= -->
+            <!-- BACK ROW (10) -->
             <g class="plant sprout" style="--x: 18px; --y: 3px; --leaf-color:rgba(128,168,156,.78);">
               <path class="stem" d="M0 150 L0 108"></path>
               <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
@@ -228,11 +243,11 @@
               </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -251,11 +266,11 @@
               </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -274,11 +289,11 @@
               </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -297,21 +312,17 @@
               </g>
               <path class="stem" d="M0 150 L0 86"></path>
               <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <!-- =========================
-                 FRONT ROW (10)
-                 - spacing +3pt 반영: x 간격 확대
-                 - y 전체 +3px 적용(앞/뒤 간격 더 벌림)
-                 ========================= -->
+            <!-- FRONT ROW (10) -->
             <g class="plant flower" style="--x: 8px; --y: 49px; --petal-color:#F2D3A7;">
               <g transform="translate(0,150)">
                 <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
@@ -319,17 +330,16 @@
               </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
             </g>
 
-            <!-- 앞줄 새싹 높이 약간 줄인 상태 유지 + y +3 -->
             <g class="plant sprout" style="--x: 53px; --y: 53px; --leaf-color:rgba(124,160,132,.78);">
               <path class="stem" d="M0 150 L0 112"></path>
               <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
@@ -343,11 +353,11 @@
               </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -366,11 +376,11 @@
               </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -389,11 +399,11 @@
               </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -412,11 +422,11 @@
               </g>
               <path class="stem" d="M0 150 L0 102"></path>
               <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
+                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
                 <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
                 <circle class="center" cx="0" cy="0" r="6.7"/>
               </g>
@@ -431,13 +441,12 @@
         </div>
 
         <!-- 도전하기 버튼 -->
-        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(6rem - 12px);">
-          <button class="clickable-action clickable-element group glass-card px-12 py-4 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
+        <div class="mt-24 flex justify-center w-full" style="margin-top: calc(4rem - 12px);">
+          <button class="clickable-action clickable-element group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
                   data-next="screen-topics">
-            <span class="text-[20px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
+            <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
           </button>
         </div>
-
       </section>
 
       <!-- 2. Topics Screen -->
@@ -453,13 +462,15 @@
             </h2>
           </div>
         </div>
+
         <div id="topic-list" class="mt-2 flex-1 w-full flex flex-col space-y-4"></div>
+
         <footer class="mt-16 pb-10 text-center opacity-40">
           <p class="text-[10px] font-sans text-mainFont uppercase tracking-[0.4em] font-black">Faith & Promise • On-Sesang Ministry</p>
         </footer>
       </section>
 
-      <!-- 3. Study Screen (그림/애니메이션 추가 금지) -->
+      <!-- 3. Study Screen -->
       <section id="screen-study" class="screen w-full h-full animate-fade-in"></section>
     </div>
   </div>
@@ -550,31 +561,30 @@
       if (!study) return;
 
       study.innerHTML = `
-        <div class="mb-4">
+        <div class="mb-2">
           <button class="nav-back clickable-element flex items-center space-x-1 text-mainFont/40 py-3 px-1" onclick="performAction(this, () => navigateTo('screen-topics'))">
             <i data-lucide="chevron-left" size="18"></i>
             <span class="text-[13px] font-sans font-bold tracking-widest">돌아가기</span>
           </button>
         </div>
+
         <div class="flex-1 flex flex-col">
-          <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center space-x-3 bg-white/10 px-8 py-3 rounded-full border border-mainFont/10 mb-6">
-              <i data-lucide="bookmark" size="14" class="text-mainFont/30"></i>
-              <span class="text-[12px] font-sans font-black text-mainFont/60 uppercase tracking-[0.25em]">STEP 01. 마음으로 읽기</span>
-            </div>
+          <div class="text-center mb-7">
             <h2 class="text-[30px] font-classic font-bold text-mainFont tracking-tight">${currentVerse.topic}</h2>
           </div>
-          <div class="relative p-10 bg-white/25 rounded-[3.5rem] border border-white/40 shadow-2xl flex flex-col justify-center items-center min-h-[440px]">
+
+          <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 shadow-2xl flex flex-col justify-center items-center min-h-[440px]">
             <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line text-center break-keep">
               ${currentVerse.content}
             </p>
             <p class="mt-10 text-[17px] font-serif font-bold text-mainFont/40 italic">${currentVerse.reference}</p>
           </div>
         </div>
-        <div class="mt-12 pb-8">
-          <button class="clickable-element w-full btn-primary py-6 rounded-[2rem] flex items-center justify-center space-x-3" onclick="performAction(this, () => alert('퀴즈 기능은 준비 중입니다.'))">
-            <i data-lucide="play" size="20" class="fill-cream"></i>
-            <span class="text-[20px] tracking-tight font-black">암송 퀴즈 시작</span>
+
+        <div class="mt-10 pb-8">
+          <button class="clickable-element w-full btn-primary py-5 rounded-[2rem] flex items-center justify-center"
+                  onclick="performAction(this, () => alert('퀴즈 기능은 준비 중입니다.'))">
+            <span class="text-[1.7rem] font-serif font-bold leading-[1.9] tracking-tight">퀴즈 시작</span>
           </button>
         </div>
       `;
