@@ -67,22 +67,31 @@
 
     .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
 
-    /* ✅ 퀴즈 시작 버튼: 유리감 유지 + 틴트(색) 무게만 증가 */
+    /* ✅ 성경본문 카드 그림자 퍼짐 줄이기(존재감만 남기기) */
+    .study-card-shadow{
+      box-shadow:
+        0 14px 28px -26px rgba(40, 30, 45, 0.20),
+        0 10px 20px -24px rgba(40, 30, 45, 0.16);
+    }
+
+    /* ✅ 퀴즈 시작 버튼: A안(#7A675F 계열) 유리 틴트 + 테두리 화이트 믹스 + 그림자 절제 */
     .btn-primary{
-      /* 더 진한 틴트 컬러(한 톤 깊게) + 투명도는 0.26 유지 */
       background: linear-gradient(
         135deg,
-        rgba(102, 86, 78, 0.26) 0%,
-        rgba(102, 86, 78, 0.18) 100%
+        rgba(122, 103, 95, 0.34) 0%,
+        rgba(122, 103, 95, 0.22) 100%
       );
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
 
-      border: 1px solid rgba(255, 255, 255, 0.26);
+      /* 테두리: 회색 말고 “화이트 섞인 유리 테두리” */
+      border: 1px solid rgba(255, 255, 255, 0.34);
+
+      /* 그림자 퍼짐/존재감 줄이기 */
       box-shadow:
-        0 10px 22px -18px rgba(40, 30, 45, 0.26),
-        0 10px 22px rgba(102, 86, 78, 0.18),
-        inset 0 1px 0 rgba(255,255,255,0.22);
+        0 8px 16px -14px rgba(40, 30, 45, 0.18),
+        0 6px 12px -12px rgba(122, 103, 95, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.26);
 
       color: rgba(61, 43, 41, 0.92); /* mainFont 계열 */
     }
@@ -164,9 +173,9 @@
 <script type="importmap">
 {
   "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
     "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
   }
 }
@@ -573,7 +582,7 @@
             <h2 class="text-[30px] font-classic font-bold text-mainFont tracking-tight">${currentVerse.topic}</h2>
           </div>
 
-          <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 shadow-2xl flex flex-col justify-center items-center min-h-[440px]">
+          <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 study-card-shadow flex flex-col justify-center items-center min-h-[440px]">
             <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line text-center break-keep">
               ${currentVerse.content}
             </p>
@@ -581,10 +590,11 @@
           </div>
         </div>
 
-        <div class="mt-10 pb-8">
-          <button class="clickable-element w-full btn-primary py-5 rounded-[2rem] flex items-center justify-center"
+        <!-- ✅ 퀴즈 버튼: 홈 도전하기와 동일한 크기/타이포 -->
+        <div class="mt-10 pb-8 flex justify-center w-full">
+          <button class="clickable-element btn-primary px-12 py-5 rounded-[1.8rem] flex items-center justify-center"
                   onclick="performAction(this, () => alert('퀴즈 기능은 준비 중입니다.'))">
-            <span class="text-[1.7rem] font-serif font-bold leading-[1.9] tracking-tight">퀴즈 시작</span>
+            <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">퀴즈 시작</span>
           </button>
         </div>
       `;
