@@ -78,7 +78,10 @@
         0 10px 20px -24px rgba(40, 30, 45, 0.16);
     }
 
-    /* ✅ 퀴즈 시작 버튼 */
+    /* ✅ Study: 본문+인용 그룹을 15px 위로 */
+    .study-text-pack{ transform: translateY(-15px); }
+
+    /* ✅ 퀴즈 시작 버튼 (이 스펙을 엔딩 홈 버튼도 그대로 사용) */
     .btn-primary{
       background: linear-gradient(
         135deg,
@@ -188,7 +191,19 @@
       border-radius: 999px;
     }
 
-    /* ✅ 빈칸(선택 전): 고급 톤 회백 라벤더(탁하지 않게) + inset */
+    /* ✅ 특정 주제(기도응답/인도) 퀴즈 텍스트 행간 균형 보정 */
+    .quiz-fix-lines{
+      line-height: 1.86 !important;
+      letter-spacing: -0.01em;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+    .quiz-line{
+      display: block;
+      line-height: 1.86;
+    }
+
+    /* ✅ 빈칸(선택 전) */
     .quiz-blank{
       display: inline-flex;
       align-items: center;
@@ -201,12 +216,9 @@
       margin: 0 0.06em;
       border-radius: 999px;
 
-      /* 한 단계 더 고급: 약간 쿨/실키, 탁함 없이 눌러줌 */
       background: rgba(190, 188, 214, 0.88);
-
       border: none;
 
-      /* inset을 조금 더 실키하게(탁해지지 않게 대비 낮춤) */
       box-shadow:
         inset 0 1px 2px rgba(61,43,41,0.11),
         inset 0 -1px 0 rgba(255,255,255,0.16);
@@ -220,7 +232,6 @@
       line-height: 1;
     }
 
-    /* ✅ Active 빈칸: 링 페이드가 너무 빨라서 180ms로 숨 늘림 */
     .quiz-blank.is-active{
       animation: activeRingFade 180ms ease-out both;
       box-shadow:
@@ -241,7 +252,6 @@
       }
     }
 
-    /* 정답 선택 후 빈칸: 학습 본문처럼 "아무것도 없음" */
     .quiz-blank.is-filled{
       background: transparent;
       border: none;
@@ -280,13 +290,11 @@
       z-index: 2;
     }
 
-    /* 오답 디밍: 그 오답만 */
     .choice-btn.is-dimmed{
       opacity: 0.38;
       filter: grayscale(0.35);
     }
 
-    /* ✅ 정답 효과(2개): 미세 inset + soft highlight 120ms */
     .choice-btn.is-correct{
       animation: correctSettle 120ms ease-out both;
       box-shadow:
@@ -316,8 +324,8 @@
     /* ✅ 완료 시 선택지 영역 “접어서 사라지기” */
     #quiz-choice-area{
       transform-origin: top;
-      transition: max-height 120ms ease, opacity 120ms ease, transform 120ms ease;
-      max-height: 220px;
+      transition: max-height 180ms ease, opacity 180ms ease, transform 180ms ease;
+      max-height: 240px;
       opacity: 1;
       transform: translateY(0);
     }
@@ -328,15 +336,47 @@
       overflow: hidden;
       pointer-events: none;
     }
+
+    /* =========================
+       ENDING UI (요청 반영)
+       ========================= */
+
+    .float-sprout{
+      animation: floatSprout 2.9s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes floatSprout{
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    .ending-quote-card{
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 10px 24px -20px rgba(40, 30, 45, 0.20);
+    }
+
+    .ending-quote-shift{
+      transform: translateY(8px);
+    }
+
+    .ending-line{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
     "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
@@ -352,18 +392,15 @@
       <!-- 1. Intro Screen -->
       <section id="screen-intro" class="screen active animate-fade-in items-center relative w-full flex-1">
         <div class="flex flex-col items-center text-center w-full" style="margin-top: calc(1.5rem + 22px);">
-          <!-- ✅ 타이틀: #111111 고정 -->
           <h1 class="text-[2.95rem] font-classic font-black text-titleFont tracking-tighter leading-[1.38] title-vivid">
             <span>약속의 말씀</span><br />
             <span>내 마음에 쏙쏙</span>
           </h1>
 
           <div class="relative px-4 space-y-3" style="margin-top: calc(2.5rem + 2px);">
-            <!-- ✅ 슬로건: #3d2b29 -->
             <p class="text-[16px] font-serif font-bold text-mainFont tracking-tight leading-relaxed break-keep">
               "그리스도인의 말씀이 너희 속에 풍성히 거하여"
             </p>
-            <!-- ✅ 인용: #35293b -->
             <span class="text-[16px] font-serif font-bold text-subFont tracking-tight">- 골로새서 3:16 -</span>
           </div>
         </div>
@@ -642,8 +679,411 @@
 
       <!-- 4. Quiz Screen -->
       <section id="screen-quiz" class="screen w-full h-full animate-fade-in"></section>
+
+<section id="screen-ending" class="screen w-full">
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
+
+  <style>
+    /* ✅ inactive면 숨김(스크롤로 튀어나오는 버그 방지) */
+    #screen-ending{ display:none !important; }
+    #screen-ending.active{
+      display:flex !important;
+      flex-direction:column;
+      min-height: 100svh;
+      height: 100svh;
+      font-family:"Spoqa Han Sans Neo","Pretendard","ui-sans-serif","system-ui","-apple-system","BlinkMacSystemFont",sans-serif;
+    }
+
+    .ending-wrap{
+      position: relative;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      overflow:hidden;
+    }
+
+    .ending-top-spacer{
+      height: calc(env(safe-area-inset-top) + 18px);
+      width: 100%;
+      flex: 0 0 auto;
+    }
+
+    /* =========================
+       Hero / Halo (Silk)
+       ========================= */
+    .ending-hero{
+      position: relative;
+      margin-top: 8px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      flex: 0 0 auto;
+    }
+
+    /* ✅ 헤일로: “아주 약간만” 더 티나게 */
+    .halo-soft{
+      position:absolute;
+      left:50%;
+      top: -2px; /* 요청: 살짝 아래로 */
+      transform: translateX(-50%);
+      width: 362px;
+      height: 276px;
+      border-radius: 999px;
+      pointer-events:none;
+      z-index:0;
+
+      background:
+        radial-gradient(closest-side at 50% 44%,
+          rgba(255,255,255,0.22) 0%,
+          rgba(244,240,255,0.18) 36%,
+          rgba(210,200,242,0.10) 58%,
+          rgba(0,0,0,0.00) 78%);
+
+      filter: blur(1.20px);
+      opacity: 0.94;
+
+      animation: haloBreathSoft 6.1s ease-in-out infinite;
+      will-change: opacity, filter, transform;
+    }
+
+    @keyframes haloBreathSoft{
+      0%   { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
+      50%  { opacity: 0.96; filter: blur(0.95px) brightness(1.03); transform: translateX(-50%) scale(1.014); }
+      100% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
+    }
+
+    /* ✅ 실크 결(도트 대신): ‘점무늬’ 느낌 제거 */
+    .halo-soft::after{
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border-radius: 999px;
+      pointer-events:none;
+
+      background:
+        linear-gradient(115deg,
+          rgba(255,255,255,0.00) 0%,
+          rgba(255,255,255,0.05) 18%,
+          rgba(255,255,255,0.00) 36%,
+          rgba(255,255,255,0.035) 52%,
+          rgba(255,255,255,0.00) 70%,
+          rgba(255,255,255,0.03) 84%,
+          rgba(255,255,255,0.00) 100%),
+        linear-gradient(18deg,
+          rgba(210,200,242,0.00) 0%,
+          rgba(210,200,242,0.05) 26%,
+          rgba(210,200,242,0.00) 52%,
+          rgba(210,200,242,0.035) 74%,
+          rgba(210,200,242,0.00) 100%);
+
+      opacity: 0.18;
+      filter: blur(0.55px);
+
+      -webkit-mask-image: radial-gradient(closest-side at 50% 50%,
+        rgba(0,0,0,1) 52%,
+        rgba(0,0,0,0.85) 62%,
+        rgba(0,0,0,0.0) 80%);
+              mask-image: radial-gradient(closest-side at 50% 50%,
+        rgba(0,0,0,1) 52%,
+        rgba(0,0,0,0.85) 62%,
+        rgba(0,0,0,0.0) 80%);
+
+      animation: haloSilkDrift 7.6s ease-in-out infinite;
+      will-change: opacity, transform;
+    }
+
+    @keyframes haloSilkDrift{
+      0%   { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
+      50%  { transform: rotate(0.6deg)  scale(1.02); opacity: 0.20; }
+      100% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
+    }
+
+    .ending-sprout{
+      width: 232px;
+      height: 232px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* =========================
+       Strip group
+       ========================= */
+    .ending-strip{
+      width: 100%;
+      margin-top: 18px;
+      padding: 0 18px;
+      transform: translateY(55px);
+      flex: 0 0 auto;
+    }
+
+    .ending-growline{
+      width: 84px;
+      height: 2px;
+      margin: 0 auto 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.20);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+
+    .ending-text{
+      font-weight: 600;
+      color: rgba(61,43,41,0.72);
+      letter-spacing: 0.018em;
+      line-height: 1.86;
+      font-size: 20px;
+    }
+
+    .ending-line{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ending-push{ flex: 1 1 auto; width:100%; min-height: 8px; }
+
+    /* =========================
+       CTA bottom fixed
+       ========================= */
+    .ending-cta{
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 0 16px;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 64px);
+      z-index: 3;
+    }
+
+    .ending-home-btn{
+      width: 100%;
+      padding: 24px 18px;
+      border-radius: 28px;
+      background: linear-gradient(135deg,
+        rgba(122, 103, 95, 0.40) 0%,
+        rgba(122, 103, 95, 0.26) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.36);
+      box-shadow:
+        0 14px 28px -20px rgba(40, 30, 45, 0.24),
+        0 10px 18px -22px rgba(122, 103, 95, 0.26),
+        inset 0 1px 0 rgba(255,255,255,0.32),
+        inset 0 -2px 0 rgba(0,0,0,0.09);
+      color: rgba(61,43,41,0.92);
+    }
+    .ending-home-btn span{
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.004em;
+    }
+
+    /* ✅ 엔딩 진입 시 요소 스르륵 등장(천천히 + 스태거) */
+    #screen-ending .ending-hero,
+    #screen-ending .ending-strip,
+    #screen-ending .ending-cta{
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 780ms cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    #screen-ending.ending-enter .ending-hero{
+      opacity:1; transform: translateY(0);
+      transition-delay: 0ms;
+    }
+    #screen-ending.ending-enter .ending-strip{
+      opacity:1; transform: translateY(55px); /* 기존 위치 유지 */
+      transition-delay: 140ms;
+    }
+    #screen-ending.ending-enter .ending-cta{
+      opacity:1; transform: translateY(0);
+      transition-delay: 260ms;
+    }
+  </style>
+
+  <div class="ending-wrap">
+    <div class="ending-top-spacer"></div>
+
+    <div class="ending-hero" aria-hidden="true">
+      <div class="halo-soft" aria-hidden="true"></div>
+
+      <svg class="ending-sprout" viewBox="0 0 220 220" role="img" aria-label="흙 속에서 자라나는 새싹">
+        <defs>
+          <linearGradient id="leafGradL" x1="60" y1="70" x2="120" y2="118" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(150,220,134,0.94)"/>
+            <stop offset="1" stop-color="rgba(104,184,112,0.94)"/>
+          </linearGradient>
+          <linearGradient id="leafGradR" x1="160" y1="70" x2="100" y2="118" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(146,216,132,0.94)"/>
+            <stop offset="1" stop-color="rgba(98,178,108,0.94)"/>
+          </linearGradient>
+          <linearGradient id="stemGrad" x1="110" y1="90" x2="110" y2="170" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(118,194,118,0.94)"/>
+            <stop offset="1" stop-color="rgba(86,158,100,0.94)"/>
+          </linearGradient>
+
+          <linearGradient id="soilBase" x1="70" y1="172" x2="154" y2="208" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgb(118, 92, 78)"/>
+            <stop offset="1" stop-color="rgb(102, 76, 64)"/>
+          </linearGradient>
+
+          <!-- ✅ 흙 하이라이트: 얇고 연하게(과한 광택 금지) -->
+          <linearGradient id="soilSubtleHL" x1="78" y1="164" x2="150" y2="208" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(255,255,255,0.07)"/>
+            <stop offset="0.35" stop-color="rgba(255,255,255,0.035)"/>
+            <stop offset="1" stop-color="rgba(255,255,255,0.00)"/>
+          </linearGradient>
+
+          <linearGradient id="soilEdge" x1="70" y1="170" x2="156" y2="214" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(0,0,0,0.08)"/>
+            <stop offset="1" stop-color="rgba(0,0,0,0.14)"/>
+          </linearGradient>
+
+          <filter id="sproutSoftDepth" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.05" flood-color="rgba(0,0,0,0.12)"/>
+          </filter>
+        </defs>
+
+        <!-- ✅ 잎+줄기: 바운스 제거(오버슈트/스쿼시 제거), 살랑만 -->
+        <g filter="url(#sproutSoftDepth)">
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            values="-0.28 110 118; 0.28 110 118; -0.28 110 118"
+            dur="7.8s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.5;1"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
+
+          <path d="M110 172 C110 150,110 124,110 94"
+                fill="none"
+                stroke="url(#stemGrad)"
+                stroke-width="9.0"
+                stroke-linecap="round"/>
+
+          <path d="M110 172 C110 150,110 124,110 94"
+                fill="none"
+                stroke="rgba(255,255,255,0.09)"
+                stroke-width="3.8"
+                stroke-linecap="round"
+                opacity="0.46"/>
+
+          <g>
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="-0.35 110 94; 0.35 110 94; -0.35 110 94"
+              dur="7.2s"
+              begin="0.18s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keyTimes="0;0.5;1"
+              keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/>
+
+            <animateTransform
+              attributeName="transform"
+              additive="sum"
+              type="translate"
+              values="0 0; 0 -0.35; 0 0.15; 0 0"
+              dur="2.8s"
+              begin="0.42s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keyTimes="0;0.42;0.72;1"
+              keySplines="0.22 1 0.36 1; 0.2 0 0.2 1; 0.22 1 0.36 1"/>
+
+            <path d="M110 94 C76 64,40 78,42 104 C66 128,96 126,110 94 Z"
+                  fill="url(#leafGradL)"/>
+            <path d="M110 94 C144 64,180 78,178 104 C154 128,124 126,110 94 Z"
+                  fill="url(#leafGradR)"/>
+
+            <path d="M86 94 C70 84,58 90,54 102"
+                  fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M134 94 C150 84,162 90,166 102"
+                  fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- 흙 -->
+        <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
+          <path d="M56 188
+                   Q64 158 92 146
+                   Q103 141 110 144
+                   Q117 141 128 146
+                   Q156 158 164 188
+                   Q168 208 152 220
+                   Q136 232 120 228
+                   Q114 226 110 224
+                   Q106 226 100 228
+                   Q84 232 68 220
+                   Q52 208 56 188 Z"
+                fill="url(#soilBase)"/>
+
+          <!-- ✅ 흙 하이라이트: 얇은 초승달 곡선(Stroke) + 아주 약하게 -->
+          <path d="M74 186
+                   Q92 168 110 172
+                   Q128 176 146 188"
+                fill="none"
+                stroke="rgba(255,255,255,0.055)"
+                stroke-width="3.0"
+                stroke-linecap="round"
+                opacity="0.55"/>
+
+          <path d="M56 188
+                   Q64 158 92 146
+                   Q103 141 110 144
+                   Q117 141 128 146
+                   Q156 158 164 188
+                   Q168 208 152 220
+                   Q136 232 120 228
+                   Q114 226 110 224
+                   Q106 226 100 228
+                   Q84 232 68 220
+                   Q52 208 56 188 Z"
+                fill="none"
+                stroke="url(#soilEdge)"
+                stroke-width="2.4"
+                opacity="0.55"
+                stroke-linejoin="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="ending-strip">
+      <div class="ending-growline"></div>
+      <div class="ending-text">
+        <div class="ending-line">오늘도 말씀을 마음에 심었어요</div>
+        <div class="ending-line" style="margin-top: 12px;">내일도 이어서 함께 암송해요</div>
+      </div>
+    </div>
+
+    <div class="ending-push"></div>
+
+    <div class="ending-cta">
+      <button id="ending-home-btn" class="clickable-element ending-home-btn flex items-center justify-center">
+        <span>홈으로</span>
+      </button>
     </div>
   </div>
+
+  <script>
+    (function(){
+      const btn = document.getElementById("ending-home-btn");
+      if(!btn) return;
+
+      btn.addEventListener("click", function(){
+        if (typeof performAction === "function" && typeof navigateTo === "function") {
+          performAction(btn, () => navigateTo("screen-intro"));
+        } else {
+          location.reload();
+        }
+      });
+    })();
+  </script>
+</section>
 
   <script>
     const BIBLE_VERSES = [
@@ -667,12 +1107,24 @@
 
     function navigateTo(screenId) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+
       const target = document.getElementById(screenId);
       if (target) {
+        // ✅ 엔딩 재진입 시 애니메이션 리셋
+        target.classList.remove("ending-enter");
+
         target.classList.add("active");
         window.scrollTo(0, 0);
         lucide.createIcons();
+
         if (screenId === "screen-intro") restartGardenAnim();
+
+        // ✅ 엔딩 진입 시: 스르륵 등장 트리거
+        if (screenId === "screen-ending") {
+          requestAnimationFrame(() => {
+            target.classList.add("ending-enter");
+          });
+        }
       }
     }
 
@@ -744,10 +1196,17 @@
           </div>
 
           <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 study-card-shadow flex flex-col justify-center items-center min-h-[440px]">
-            <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line text-center break-keep">
-              ${escapeHTML(currentVerse.content)}
-            </p>
-            <p class="mt-10 text-[19px] font-serif font-bold text-mainFont">${escapeHTML(currentVerse.reference)}</p>
+            <!-- ✅ 본문+인용 그룹화 + 15px 위로 -->
+            <div class="study-text-pack w-full flex flex-col items-center text-center">
+              <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line break-keep">
+                ${escapeHTML(currentVerse.content)}
+              </p>
+
+              <!-- ✅ 인용도 본문과 같은 크기(1.7rem) -->
+              <p class="mt-10 text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont break-keep">
+                ${escapeHTML(currentVerse.reference)}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -773,6 +1232,9 @@
        QUIZ
        ========================= */
     let quiz = null;
+
+    // ✅ 완료 후 엔딩 전환(접힘 화면 여운 +0.7초)
+    const ENDING_TRANSITION_DELAY = 1520;
 
     function startQuiz(){
       quiz = buildQuizFromVerse(currentVerse, 10);
@@ -836,6 +1298,7 @@
         active: 0,
         completed: false,
         dimmedWrong: new Set(),
+        didScheduleEnding: false,
       };
     }
 
@@ -852,7 +1315,6 @@
         <div class="pt-2 pb-4">
           <div class="flex items-end justify-between">
             <div class="flex-1">
-              <!-- ✅ 주제명 +3pt -->
               <div class="text-[27px] font-classic font-black text-mainFont/92 tracking-tight truncate">
                 ${escapeHTML(quiz.topic)}
               </div>
@@ -890,9 +1352,19 @@
       bindChoiceHandlers();
 
       const choiceArea = document.getElementById("quiz-choice-area");
+
       if (choiceArea && (quiz.completed || quiz.active >= quiz.blanks.length)) {
         requestAnimationFrame(() => choiceArea.classList.add("is-collapsed"));
+        scheduleEndingTransition();
       }
+    }
+
+    function scheduleEndingTransition(){
+      if (!quiz || quiz.didScheduleEnding) return;
+      quiz.didScheduleEnding = true;
+      setTimeout(() => {
+        navigateTo("screen-ending");
+      }, ENDING_TRANSITION_DELAY);
     }
 
     function renderQuizBodyHTML(){
@@ -915,7 +1387,8 @@
           return out;
         }).join(" ");
 
-        html += `<p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont break-keep">${lineParts}</p>`;
+        const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
+        html += `<span class="quiz-line text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">${lineParts}</span>`;
       });
 
       return html;
@@ -940,11 +1413,11 @@
         return out;
       }).join(" ");
 
-      /* ✅ 인용구절 텍스트 크기 = 본문 텍스트 크기(1.7rem) 통일 */
+      const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
       return `
-        <p class="mt-10 text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont break-keep">
+        <div class="mt-10 text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">
           ${parts}
-        </p>
+        </div>
       `;
     }
 
@@ -1104,6 +1577,13 @@
       initNavigation();
       lucide.createIcons();
       restartGardenAnim();
+
+      const homeBtn = document.getElementById("ending-home-btn");
+      if (homeBtn){
+        homeBtn.addEventListener("click", function(){
+          performAction(this, () => navigateTo("screen-intro"));
+        });
+      }
     });
   </script>
 </body>
