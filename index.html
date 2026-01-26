@@ -6,9 +6,9 @@
   <title>약속의 말씀: 내 마음에 쏙쏙</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
- <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
+
   <script>
     tailwind.config = {
       theme: {
@@ -59,24 +59,48 @@
     h1,h2,h3{ font-family:"Noto Serif KR", serif; }
     .bible-text{ font-family:"Gowun Batang", serif; }
     .break-keep{ word-break: keep-all; }
+  
+.glass-card{
+  background: rgba(255, 255, 255, 0.17);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
-    .glass-card{
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 0.5px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 4px 24px -12px rgba(40, 30, 45, 0.10);
-    }
+ border: 0.5px solid rgba(255, 255, 255, 0.20);
+
+
+
+
+  box-shadow:
+    /* ✅ 유리 엣지 (얇은 테두리 착시) */
+    inset 0 0 0 1px rgba(255,255,255,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.28),
+
+    /* ✅ 카드가 뜨는 핵심 그림자 */
+    0 26px 40px -26px rgba(40,30,45,0.34),
+    0 12px 22px -20px rgba(40,30,45,0.22),
+
+    /* ✅ 바닥에 살짝 닿아있는 접지 그림자 */
+    0 4px 8px -6px rgba(40,30,45,0.12);
+}
+
+
+
+
+
+
     .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
 
-    .study-card-shadow{
-      box-shadow:
-        0 14px 28px -26px rgba(40, 30, 45, 0.20),
-        0 10px 20px -24px rgba(40, 30, 45, 0.16);
-    }
+.study-card-shadow{
+box-shadow:
+  0 20px 36px -22px rgba(40,30,45,0.28),
+  0 12px 24px -20px rgba(40,30,45,0.22),
+  inset 0 1px 0 rgba(255,255,255,0.34);
 
-    /* ✅ Study: 본문+인용 블록 위치 미세 조정 (기존 -18px → -13px : "조금 아래로 5px" 체감) */
-    .study-text-pack{ transform: translateY(-0px); }
+}
+
+
+    /* ✅ Study: 본문+인용 블록을 "기존보다 5px 아래로" (translateY -18px → -13px) */
+    .study-text-pack{ transform: translateY(5px); }
 
     .btn-primary{
       background: linear-gradient(135deg, rgba(122, 103, 95, 0.34) 0%, rgba(122, 103, 95, 0.22) 100%);
@@ -127,24 +151,34 @@
     .quiz-progress-rail{ height: 2px; background: rgba(255,255,255,0.20); border-radius: 999px; overflow: hidden; }
     .quiz-progress-bar{ height: 100%; width: 0%; background: rgba(61,43,41,0.40); transition: width 120ms ease; border-radius: 999px; }
 
-    /* ✅ 퀴즈 카드 내부: "특정 두 줄만 가까워보이는" 현상 방지용 라인 간격 규칙을 '완전 통일' */
-    .quiz-fix-lines{ line-height: 1.86 !important; letter-spacing: -0.01em; word-break: keep-all; overflow-wrap: normal; }
+    /* ✅ 퀴즈 행간 랜덤 깨짐(진입마다 달라지는 현상) 방지:
+       line-height만 믿지 말고 "줄 자체에 padding"으로 물리 고정 */
+    .quiz-line{
+      display: block;
+      line-height: 1.86;
+      padding: 0.12em 0; /* ← 핵심 */
+      letter-spacing: -0.01em;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+    .quiz-quote{
+      line-height: 1.86;
+      letter-spacing: -0.01em;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
 
-    .quiz-line{ display: block; line-height: 1.86; }
-    /* 모든 줄 사이를 동일 규칙으로 띄움 (브라우저/폰트 렌더링 차이에도 안정적) */
-    .quiz-line + .quiz-line{ margin-top: 0.12em; }
-
-    /* 기도응답/인도: 더 "균일하게" 보이도록 줄간격만 살짝 보정 (원하면 0.14~0.18em 사이로만 조절) */
-    .quiz-tightfix .quiz-line + .quiz-line{ margin-top: 0.14em; }
-
+    /* ✅ inline-flex(베이스라인 이슈) 제거 → inline-block로 안정화 */
     .quiz-blank{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      display: inline-block;
+      text-align: center;
+
       height: 1.10em;
+      line-height: 1.10em; /* ← 높이=라인높이로 가운데 정렬 */
       min-width: 2.45em;
       padding: 0 0.60em;
       margin: 0 0.06em;
+
       border-radius: 999px;
       background: rgba(190, 188, 214, 0.88);
       border: none;
@@ -153,8 +187,7 @@
       font-weight: 900;
       letter-spacing: -0.01em;
       vertical-align: baseline;
-      transform: translateY(0.05em);
-      line-height: 1;
+      white-space: nowrap;
     }
     .quiz-blank.is-active{
       animation: activeRingFade 180ms ease-out both;
@@ -171,8 +204,8 @@
       padding: 0;
       min-width: 0;
       height: auto;
+      line-height: inherit;
       border-radius: 0;
-      transform: none;
     }
 
     .choice-btn{
@@ -337,8 +370,6 @@
     #screen-ending.ending-enter .ending-strip{ opacity:1; transform: translateY(0); transition-delay: 240ms; }
     #screen-ending.ending-enter .ending-cta{ opacity:1; transform: translateY(0); transition-delay: 520ms; }
   </style>
-
-
 <script type="importmap">
 {
   "imports": {
@@ -437,6 +468,7 @@
 
       <!-- 5. Ending Screen -->
       <section id="screen-ending" class="screen w-full">
+        <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
         <div class="ending-wrap">
           <div class="ending-top-spacer"></div>
           <div class="ending-hero" aria-hidden="true">
@@ -466,26 +498,24 @@
                 </g>
               </g>
 
-              <!-- ✅ 엔딩 흙이 줄기 밑을 3px 더 덮기: soil 그룹을 위로 3px 이동 -->
+              <!-- ✅ 엔딩 흙이 줄기 밑을 3px 더 덮기 -->
               <g transform="translate(0,-3)">
                 <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
                   <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="url(#soilBase)"/>
 
-                  <!-- ✅ 엔딩 흙 하이라이트: 두께/강도/오퍼시티 2단계↑ + 더 자연스럽게(부드러운 언더레이 1겹 추가), 둥근 라인 유지 -->
-                  <!-- soft underlay -->
-                  <path d="M74 186 Q92 168 110 172 Q128 176 146 188"
+                  <!-- ✅ 엔딩 흙 하이라이트: 두께/강도/오퍼시티 2단계↑ + 더 자연스럽게(2겹 레이어) -->
+                  <path d="M72 186 Q92 166 110 171 Q128 176 148 190"
                         fill="none"
-                        stroke="rgba(255,255,255,0.07)"
-                        stroke-width="7.4"
+                        stroke="rgba(255,255,255,0.12)"
+                        stroke-width="4.8"
                         stroke-linecap="round"
-                        opacity="0.22"/>
-                  <!-- main highlight -->
-                  <path d="M74 186 Q92 168 110 172 Q128 176 146 188"
+                        opacity="0.58"/>
+                  <path d="M78 189 Q96 176 110 178 Q126 180 142 191"
                         fill="none"
-                        stroke="rgba(255,255,255,0.14)"
-                        stroke-width="4.6"
+                        stroke="rgba(255,255,255,0.09)"
+                        stroke-width="3.8"
                         stroke-linecap="round"
-                        opacity="0.54"/>
+                        opacity="0.40"/>
 
                   <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="none" stroke="url(#soilEdge)" stroke-width="2.4" opacity="0.55" stroke-linejoin="round"/>
                 </g>
@@ -699,9 +729,6 @@
       const progressPct = total === 0 ? 0 : Math.round((done / total) * 100);
       const stepText = `${Math.min(done, total)}/${total}`;
 
-      const needsFix = (quiz.verseId === "prayer" || quiz.verseId === "guidance");
-      const fixWrap = needsFix ? "quiz-tightfix" : "";
-
       quizEl.innerHTML = `
         <div class="pt-2 pb-4">
           <div class="flex items-end justify-between">
@@ -719,7 +746,7 @@
 
         <div class="flex-1 flex flex-col">
           <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 study-card-shadow flex flex-col justify-center items-center min-h-[440px]">
-            <div class="w-full text-center ${fixWrap}">
+            <div class="w-full text-center">
               ${renderQuizBodyHTML()}
               ${renderQuizQuoteHTML()}
             </div>
@@ -754,8 +781,7 @@
           flatIdx++;
           return out;
         }).join(" ");
-        const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
-        html += `<span class="quiz-line text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">${lineParts}</span>`;
+        html += `<span class="quiz-line text-[1.7rem] font-serif font-bold text-mainFont break-keep">${lineParts}</span>`;
       });
       return html;
     }
@@ -774,8 +800,7 @@
         flatIdx++;
         return out;
       }).join(" ");
-      const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
-      return `<div class="mt-10 text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">${parts}</div>`;
+      return `<div class="mt-10 quiz-quote text-[1.7rem] font-serif font-bold text-mainFont break-keep">${parts}</div>`;
     }
 
     function renderChoiceAreaHTML() {
