@@ -6,18 +6,18 @@
   <title>약속의 말씀: 내 마음에 쏙쏙</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
-
+ <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             themeBg: "#a595c8",
-            titleFont: "#111111", /* ✅ 타이틀 고정 */
-            mainFont: "#3d2b29",  /* ✅ 슬로건 */
-            subFont: "#35293b",   /* ✅ 인용(골로새서 3:16) */
+            titleFont: "#111111",
+            mainFont: "#3d2b29",
+            subFont: "#35293b",
             cream: "#f2efea",
             pointFont: "#2d3d2c",
             brickRed: "#a34c44",
@@ -50,7 +50,6 @@
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
       font-synthesis: none;
-
       overscroll-behavior-y:none;
       user-select:none;
       overflow-x:hidden;
@@ -61,7 +60,6 @@
     .bible-text{ font-family:"Gowun Batang", serif; }
     .break-keep{ word-break: keep-all; }
 
-    /* ✅ 공통 Glass Card (알파 0.15 / 블러 15px) */
     .glass-card{
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(15px);
@@ -71,43 +69,31 @@
     }
     .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
 
-    /* ✅ 성경본문 카드 그림자 퍼짐 줄이기(존재감만 남기기) */
     .study-card-shadow{
       box-shadow:
         0 14px 28px -26px rgba(40, 30, 45, 0.20),
         0 10px 20px -24px rgba(40, 30, 45, 0.16);
     }
 
-    /* ✅ Study: 본문+인용 그룹을 15px 위로 */
-    .study-text-pack{ transform: translateY(-15px); }
+    /* ✅ Study: 본문+인용 블록 위치 미세 조정 (기존 -18px → -13px : "조금 아래로 5px" 체감) */
+    .study-text-pack{ transform: translateY(-0px); }
 
-    /* ✅ 퀴즈 시작 버튼 (이 스펙을 엔딩 홈 버튼도 그대로 사용) */
     .btn-primary{
-      background: linear-gradient(
-        135deg,
-        rgba(122, 103, 95, 0.34) 0%,
-        rgba(122, 103, 95, 0.22) 100%
-      );
+      background: linear-gradient(135deg, rgba(122, 103, 95, 0.34) 0%, rgba(122, 103, 95, 0.22) 100%);
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.34);
-      box-shadow:
-        0 8px 16px -14px rgba(40, 30, 45, 0.18),
-        0 6px 12px -12px rgba(122, 103, 95, 0.18),
-        inset 0 1px 0 rgba(255,255,255,0.26);
+      box-shadow: 0 8px 16px -14px rgba(40, 30, 45, 0.18), 0 6px 12px -12px rgba(122, 103, 95, 0.18), inset 0 1px 0 rgba(255,255,255,0.26);
       color: rgba(61, 43, 41, 0.92);
     }
 
-    /* [핵심] 눌림(Press) 상태 스타일 */
     .is-pressing{
       transform: translateY(1px) scale(0.985) !important;
       filter: brightness(0.96) !important;
       box-shadow: inset 0 1px 4px rgba(0,0,0,0.05) !important;
     }
     .clickable-element{
-      transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1),
-                  filter 0.15s ease,
-                  box-shadow 0.15s ease;
+      transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), filter 0.15s ease, box-shadow 0.15s ease;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -119,139 +105,65 @@
       filter: contrast(1.11);
     }
 
-    /* =========================
-       HOME Garden (식물 애니메이션)
-       ========================= */
     #garden-wrap{ width:100%; }
     .garden{ width: min(420px, 96vw); height:auto; display:block; }
-
-    .garden{
-      --stemGreen: rgba(46, 98, 74, .86);
-      --baseLeafGreen: rgba(46, 98, 74, .82);
-    }
-
-    .garden .soil{
-      fill:none;
-      stroke: rgba(60, 42, 36, .10);
-      stroke-width: 4.6;
-      stroke-linecap: round;
-    }
-
-    .garden .stem{
-      stroke: var(--stemGreen);
-      stroke-width: 2.9;
-      fill:none;
-      stroke-linecap: round;
-    }
-
+    .garden{ --stemGreen: rgba(46, 98, 74, .86); --baseLeafGreen: rgba(46, 98, 74, .82); }
+    .garden .soil{ fill:none; stroke: rgba(60, 42, 36, .10); stroke-width: 4.6; stroke-linecap: round; }
+    .garden .stem{ stroke: var(--stemGreen); stroke-width: 2.9; fill:none; stroke-linecap: round; }
     .garden .leaf{ fill: var(--leaf-color); }
     .garden .petal{ fill: var(--petal-color); }
     .garden .center{ fill: rgba(248, 246, 242, .92); }
     .garden .flowerleaf{ fill: var(--baseLeafGreen); }
+    .garden .plant{ opacity: 0; transform: translate(var(--x), var(--y)) translateY(28px) scale(0); transform-origin: 0px 150px; will-change: transform, opacity; }
 
-    .garden .plant{
-      opacity: 0;
-      transform: translate(var(--x), var(--y)) translateY(28px) scale(0);
-      transform-origin: 0px 150px;
-      will-change: transform, opacity;
-    }
-
-    /* ✅ 흙선만 보이는 시간 단축: 딜레이 1.55s → 1.25s */
-    #garden-wrap.play .garden .plant{
-      animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 1.25s forwards;
-    }
+    /* ✅ 홈: 흙선만 보이는 시간 1초 단축 (delay 1.25s → 0.25s) */
+    #garden-wrap.play .garden .plant{ animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 0.25s forwards; }
 
     @keyframes plantRiseSmooth{
-      from{
-        opacity: 0;
-        transform: translate(var(--x), var(--y)) translateY(28px) scale(0);
-      }
-      to{
-        opacity: 1;
-        transform: translate(var(--x), var(--y)) translateY(0px) scale(1);
-      }
+      from{ opacity: 0; transform: translate(var(--x), var(--y)) translateY(28px) scale(0); }
+      to{ opacity: 1; transform: translate(var(--x), var(--y)) translateY(0px) scale(1); }
     }
 
-    /* =========================
-       QUIZ UI
-       ========================= */
+    .quiz-progress-rail{ height: 2px; background: rgba(255,255,255,0.20); border-radius: 999px; overflow: hidden; }
+    .quiz-progress-bar{ height: 100%; width: 0%; background: rgba(61,43,41,0.40); transition: width 120ms ease; border-radius: 999px; }
 
-    /* 프로그레스 라인 */
-    .quiz-progress-rail{
-      height: 2px;
-      background: rgba(255,255,255,0.20);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .quiz-progress-bar{
-      height: 100%;
-      width: 0%;
-      background: rgba(61,43,41,0.40);
-      transition: width 120ms ease;
-      border-radius: 999px;
-    }
+    /* ✅ 퀴즈 카드 내부: "특정 두 줄만 가까워보이는" 현상 방지용 라인 간격 규칙을 '완전 통일' */
+    .quiz-fix-lines{ line-height: 1.86 !important; letter-spacing: -0.01em; word-break: keep-all; overflow-wrap: normal; }
 
-    /* ✅ 특정 주제(기도응답/인도) 퀴즈 텍스트 행간 균형 보정 */
-    .quiz-fix-lines{
-      line-height: 1.86 !important;
-      letter-spacing: -0.01em;
-      word-break: keep-all;
-      overflow-wrap: normal;
-    }
-    .quiz-line{
-      display: block;
-      line-height: 1.86;
-    }
+    .quiz-line{ display: block; line-height: 1.86; }
+    /* 모든 줄 사이를 동일 규칙으로 띄움 (브라우저/폰트 렌더링 차이에도 안정적) */
+    .quiz-line + .quiz-line{ margin-top: 0.12em; }
 
-    /* ✅ 빈칸(선택 전) */
+    /* 기도응답/인도: 더 "균일하게" 보이도록 줄간격만 살짝 보정 (원하면 0.14~0.18em 사이로만 조절) */
+    .quiz-tightfix .quiz-line + .quiz-line{ margin-top: 0.14em; }
+
     .quiz-blank{
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       height: 1.10em;
       min-width: 2.45em;
       padding: 0 0.60em;
-
       margin: 0 0.06em;
       border-radius: 999px;
-
       background: rgba(190, 188, 214, 0.88);
       border: none;
-
-      box-shadow:
-        inset 0 1px 2px rgba(61,43,41,0.11),
-        inset 0 -1px 0 rgba(255,255,255,0.16);
-
-      color: rgba(61,43,41,0.92);
+      box-shadow: inset 0 1px 2px rgba(61,43,41,0.11), inset 0 -1px 0 rgba(255,255,255,0.16);
+      color: rgba(61, 43, 41, 0.92);
       font-weight: 900;
       letter-spacing: -0.01em;
-
       vertical-align: baseline;
       transform: translateY(0.05em);
       line-height: 1;
     }
-
     .quiz-blank.is-active{
       animation: activeRingFade 180ms ease-out both;
-      box-shadow:
-        inset 0 1px 2px rgba(61,43,41,0.11),
-        inset 0 -1px 0 rgba(255,255,255,0.16),
-        0 0 0 1px rgba(61,43,41,0.18);
+      box-shadow: inset 0 1px 2px rgba(61,43,41,0.11), inset 0 -1px 0 rgba(255,255,255,0.16), 0 0 0 1px rgba(61,43,41,0.18);
     }
     @keyframes activeRingFade{
-      from{ box-shadow:
-        inset 0 1px 2px rgba(61,43,41,0.11),
-        inset 0 -1px 0 rgba(255,255,255,0.16),
-        0 0 0 1px rgba(61,43,41,0.00);
-      }
-      to{ box-shadow:
-        inset 0 1px 2px rgba(61,43,41,0.11),
-        inset 0 -1px 0 rgba(255,255,255,0.16),
-        0 0 0 1px rgba(61,43,41,0.18);
-      }
+      from{ box-shadow: inset 0 1px 2px rgba(61,43,41,0.11), inset 0 -1px 0 rgba(255,255,255,0.16), 0 0 0 1px rgba(61,43,41,0.00); }
+      to{ box-shadow: inset 0 1px 2px rgba(61,43,41,0.11), inset 0 -1px 0 rgba(255,255,255,0.16), 0 0 0 1px rgba(61,43,41,0.18); }
     }
-
     .quiz-blank.is-filled{
       background: transparent;
       border: none;
@@ -263,23 +175,19 @@
       transform: none;
     }
 
-    /* 선택지(풀) */
     .choice-btn{
       width: 100%;
       text-align: center;
       padding: 16px 14px;
       border-radius: 22px;
-
       background: rgba(255,255,255,0.16);
       border: 1px solid rgba(255,255,255,0.18);
       box-shadow: 0 10px 22px -18px rgba(40, 30, 45, 0.22);
-
-      color: rgba(61,43,41,0.92);
+      color: rgba(61, 43, 41, 0.92);
       position: relative;
       overflow: hidden;
       isolation: isolate;
     }
-
     .choice-label{
       font-family:"Noto Serif KR", serif;
       font-weight: 800;
@@ -289,23 +197,12 @@
       position: relative;
       z-index: 2;
     }
-
-    .choice-btn.is-dimmed{
-      opacity: 0.38;
-      filter: grayscale(0.35);
-    }
-
+    .choice-btn.is-dimmed{ opacity: 0.38; filter: grayscale(0.35); }
     .choice-btn.is-correct{
       animation: correctSettle 120ms ease-out both;
-      box-shadow:
-        inset 0 2px 8px rgba(61,43,41,0.16),
-        inset 0 -1px 0 rgba(255,255,255,0.26),
-        0 10px 22px -18px rgba(40, 30, 45, 0.22);
+      box-shadow: inset 0 2px 8px rgba(61,43,41,0.16), inset 0 -1px 0 rgba(255,255,255,0.26), 0 10px 22px -18px rgba(40, 30, 45, 0.22);
     }
-    @keyframes correctSettle{
-      from{ transform: scale(1); filter: brightness(1); }
-      to{ transform: scale(0.992); filter: brightness(1.02); }
-    }
+    @keyframes correctSettle{ from{ transform: scale(1); filter: brightness(1); } to{ transform: scale(0.992); filter: brightness(1.02); } }
     .choice-btn.is-correct::after{
       content:"";
       position:absolute;
@@ -316,12 +213,8 @@
       z-index:1;
       pointer-events:none;
     }
-    @keyframes softGlow{
-      from{ opacity: 0; }
-      to{ opacity: 1; }
-    }
+    @keyframes softGlow{ from{ opacity: 0; } to{ opacity: 1; } }
 
-    /* ✅ 완료 시 선택지 영역 “접어서 사라지기” */
     #quiz-choice-area{
       transform-origin: top;
       transition: max-height 180ms ease, opacity 180ms ease, transform 180ms ease;
@@ -337,55 +230,129 @@
       pointer-events: none;
     }
 
-    /* =========================
-       ENDING UI (요청 반영)
-       ========================= */
+    #screen-ending{ display:none !important; }
+    #screen-ending.active{
+      display:flex !important;
+      flex-direction:column;
+      min-height: 100svh;
+      height: 100svh;
+      font-family:"Spoqa Han Sans Neo","Pretendard",sans-serif;
+    }
+    .ending-wrap{
+      position: relative;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      overflow:hidden;
+    }
+    .ending-top-spacer{ height: calc(env(safe-area-inset-top) + 18px); width: 100%; flex: 0 0 auto; }
+    .ending-hero{ position: relative; margin-top: 8px; display: grid; place-items: center; isolation: isolate; flex: 0 0 auto; }
+    .halo-soft{
+      position:absolute;
+      left:50%;
+      top: -2px;
+      transform: translateX(-50%);
+      width: 362px;
+      height: 276px;
+      border-radius: 999px;
+      pointer-events:none;
+      z-index:0;
+      background: radial-gradient(closest-side at 50% 44%, rgba(255,255,255,0.22) 0%, rgba(244,240,255,0.18) 36%, rgba(210,200,242,0.10) 58%, rgba(0,0,0,0.00) 78%);
+      filter: blur(1.20px);
+      opacity: 0.94;
+      animation: haloBreathSoft 6.1s ease-in-out infinite;
+      will-change: opacity, filter, transform;
+    }
+    @keyframes haloBreathSoft{
+      0% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
+      50% { opacity: 0.96; filter: blur(0.95px) brightness(1.03); transform: translateX(-50%) scale(1.014); }
+      100% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
+    }
+    .halo-soft::after{
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border-radius: 999px;
+      pointer-events:none;
+      background:
+        linear-gradient(115deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.05) 18%, rgba(255,255,255,0.00) 36%, rgba(255,255,255,0.035) 52%, rgba(255,255,255,0.00) 70%, rgba(255,255,255,0.03) 84%, rgba(255,255,255,0.00) 100%),
+        linear-gradient(18deg, rgba(210,200,242,0.00) 0%, rgba(210,200,242,0.05) 26%, rgba(210,200,242,0.00) 52%, rgba(210,200,242,0.035) 74%, rgba(210,200,242,0.00) 100%);
+      opacity: 0.18;
+      filter: blur(0.55px);
+      -webkit-mask-image: radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 52%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.0) 80%);
+      mask-image: radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 52%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.0) 80%);
+      animation: haloSilkDrift 7.6s ease-in-out infinite;
+      will-change: opacity, transform;
+    }
+    @keyframes haloSilkDrift{
+      0% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
+      50% { transform: rotate(0.6deg) scale(1.02); opacity: 0.20; }
+      100% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
+    }
 
-    .float-sprout{
-      animation: floatSprout 2.9s ease-in-out infinite;
-      will-change: transform;
-    }
-    @keyframes floatSprout{
-      0%   { transform: translateY(0); }
-      50%  { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
+    .ending-sprout{ width: 232px; height: 232px; position: relative; z-index: 1; }
 
-    .ending-quote-card{
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 10px 24px -20px rgba(40, 30, 45, 0.20);
+    .ending-strip{ width: 100%; margin-top: 18px; padding: 0 18px; flex: 0 0 auto; }
+    .ending-growline{ width: 84px; height: 2px; margin: 0 auto 22px; border-radius: 999px; background: rgba(255,255,255,0.20); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+    .ending-text{ font-weight: 600; color: rgba(61,43,41,0.72); letter-spacing: 0.018em; line-height: 1.86; font-size: 20px; }
+    .ending-line{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ending-push{ flex: 1 1 auto; width:100%; min-height: 8px; }
+    .ending-cta{
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 16px;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 64px);
+      z-index: 3;
     }
+    .ending-home-btn{
+      width: 100%;
+      padding: 24px 18px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(122, 103, 95, 0.40) 0%, rgba(122, 103, 95, 0.26) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.36);
+      box-shadow: 0 14px 28px -20px rgba(40, 30, 45, 0.24), 0 10px 18px -22px rgba(122, 103, 95, 0.26), inset 0 1px 0 rgba(255,255,255,0.32), inset 0 -2px 0 rgba(0,0,0,0.09);
+      color: rgba(61, 43, 41, 0.92);
+    }
+    .ending-home-btn span{ font-weight: 600; font-size: 20px; letter-spacing: -0.004em; }
 
-    .ending-quote-shift{
-      transform: translateY(8px);
+    #screen-ending .ending-hero,
+    #screen-ending .ending-strip,
+    #screen-ending .ending-cta{
+      opacity: 0;
+      transform: translateY(34px);
+      transition:
+        opacity 980ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
     }
-
-    .ending-line{
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    #screen-ending.ending-enter .ending-hero{ opacity:1; transform: translateY(0); transition-delay: 0ms; }
+    #screen-ending.ending-enter .ending-strip{ opacity:1; transform: translateY(0); transition-delay: 240ms; }
+    #screen-ending.ending-enter .ending-cta{ opacity:1; transform: translateY(0); transition-delay: 520ms; }
   </style>
+
 
 <script type="importmap">
 {
   "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
   }
 }
 </script>
 </head>
 
 <body class="font-sans">
-  <div id="app-container" class="min-h-screen w-full flex flex-col items-center relative">
-    <div class="absolute inset-0 opacity-[0.05] pointer-events-none"
-         style="background-image: radial-gradient(#432d4c 1px, transparent 1px); background-size: 32px 32px;"></div>
+  <div id="root" class="min-h-screen w-full flex flex-col items-center relative">
+    <div class="absolute inset-0 opacity-[0.05] pointer-events-none" style="background-image: radial-gradient(#432d4c 1px, transparent 1px); background-size: 32px 32px;"></div>
 
     <div class="w-full max-w-[430px] flex-1 flex flex-col px-5 pt-[calc(env(safe-area-inset-top)+20px)] pb-[calc(env(safe-area-inset-bottom)+20px)] z-10 mx-auto">
 
@@ -405,249 +372,39 @@
           </div>
         </div>
 
-        <!-- HOME Garden -->
-        <div class="w-full flex justify-center items-center" id="garden-wrap" aria-hidden="true"
-             style="margin-top: calc(2.5rem - 6px);">
+        <div class="w-full flex justify-center items-center" id="garden-wrap" aria-hidden="true" style="margin-top: calc(2.5rem - 6px);">
           <svg class="garden" viewBox="-60 -40 540 320" aria-hidden="true">
             <path class="soil" d="M18 214 C92 188, 146 240, 200 214 C254 188, 316 240, 382 214"></path>
 
-            <!-- BACK ROW (10) -->
-            <g class="plant sprout" style="--x: 18px; --y: 3px; --leaf-color:rgba(128,168,156,.78);">
-              <path class="stem" d="M0 150 L0 108"></path>
-              <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
-            </g>
+            <!-- Back Row -->
+            <g class="plant sprout" style="--x: 18px; --y: 3px; --leaf-color:rgba(128,168,156,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 63px; --y: 7px; --petal-color:#AFCFE6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
 
-            <g class="plant flower" style="--x: 63px; --y: 7px; --petal-color:#AFCFE6;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 86"></path>
-              <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
+            <g class="plant sprout" style="--x: 106px; --y: 3px; --leaf-color:rgba(120,160,148,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 151px; --y: 7px; --petal-color:#C2B4D6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 194px; --y: 3px; --leaf-color:rgba(138,168,136,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 239px; --y: 7px; --petal-color:#BFE3D3;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 282px; --y: 3px; --leaf-color:rgba(120,160,148,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 327px; --y: 7px; --petal-color:#F0B8C6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 370px; --y: 3px; --leaf-color:rgba(138,176,154,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 415px; --y: 7px; --petal-color:#E6DFA3;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
 
-            <g class="plant sprout" style="--x: 106px; --y: 3px; --leaf-color:rgba(120,160,148,.78);">
-              <path class="stem" d="M0 150 L0 108"></path>
-              <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 151px; --y: 7px; --petal-color:#C2B4D6;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 86"></path>
-              <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 194px; --y: 3px; --leaf-color:rgba(138,168,136,.78);">
-              <path class="stem" d="M0 150 L0 108"></path>
-              <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 239px; --y: 7px; --petal-color:#BFE3D3;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 86"></path>
-              <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 282px; --y: 3px; --leaf-color:rgba(120,160,148,.78);">
-              <path class="stem" d="M0 150 L0 108"></path>
-              <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 327px; --y: 7px; --petal-color:#F0B8C6;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 86"></path>
-              <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 370px; --y: 3px; --leaf-color:rgba(138,176,154,.78);">
-              <path class="stem" d="M0 150 L0 108"></path>
-              <ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="110" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 415px; --y: 7px; --petal-color:#E6DFA3;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 86"></path>
-              <g transform="translate(0,84)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <!-- FRONT ROW (10) -->
-            <g class="plant flower" style="--x: 8px; --y: 49px; --petal-color:#F2D3A7;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 102"></path>
-              <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 53px; --y: 53px; --leaf-color:rgba(124,160,132,.78);">
-              <path class="stem" d="M0 150 L0 112"></path>
-              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 98px; --y: 47px; --petal-color:#C7E2C9;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 102"></path>
-              <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 143px; --y: 53px; --leaf-color:rgba(138,168,156,.78);">
-              <path class="stem" d="M0 150 L0 112"></path>
-              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 188px; --y: 50px; --petal-color:#D7C7F2;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 102"></path>
-              <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 233px; --y: 53px; --leaf-color:rgba(152,176,164,.78);">
-              <path class="stem" d="M0 150 L0 112"></path>
-              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 278px; --y: 47px; --petal-color:#E3B5A4;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 102"></path>
-              <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 323px; --y: 53px; --leaf-color:rgba(120,160,148,.78);">
-              <path class="stem" d="M0 150 L0 112"></path>
-              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
-            </g>
-
-            <g class="plant flower" style="--x: 368px; --y: 50px; --petal-color:#F0B0D4;">
-              <g transform="translate(0,150)">
-                <path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path>
-                <path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path>
-              </g>
-              <path class="stem" d="M0 150 L0 102"></path>
-              <g transform="translate(0,100)">
-                <ellipse class="petal" cx="0"     cy="-15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="-6.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="12.6"  cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="0"     cy="15.2" rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="6.2"  rx="10.3" ry="8.0"/>
-                <ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/>
-                <circle class="center" cx="0" cy="0" r="6.7"/>
-              </g>
-            </g>
-
-            <g class="plant sprout" style="--x: 413px; --y: 53px; --leaf-color:rgba(138,176,154,.78);">
-              <path class="stem" d="M0 150 L0 112"></path>
-              <ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse>
-              <ellipse class="leaf" cx="11"  cy="114" rx="11" ry="6.2"></ellipse>
-            </g>
+            <!-- Front Row -->
+            <g class="plant flower" style="--x: 8px; --y: 49px; --petal-color:#F2D3A7;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 102"></path><g transform="translate(0,100)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 53px; --y: 53px; --leaf-color:rgba(124,160,132,.78);"><path class="stem" d="M0 150 L0 112"></path><ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="114" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 98px; --y: 47px; --petal-color:#C7E2C9;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 102"></path><g transform="translate(0,100)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 143px; --y: 53px; --leaf-color:rgba(138,168,156,.78);"><path class="stem" d="M0 150 L0 112"></path><ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="114" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 188px; --y: 50px; --petal-color:#D7C7F2;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 102"></path><g transform="translate(0,100)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 233px; --y: 53px; --leaf-color:rgba(152,176,164,.78);"><path class="stem" d="M0 150 L0 112"></path><ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="114" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 278px; --y: 47px; --petal-color:#E3B5A4;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 102"></path><g transform="translate(0,100)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 323px; --y: 53px; --leaf-color:rgba(120,160,148,.78);"><path class="stem" d="M0 150 L0 112"></path><ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="114" rx="11" ry="6.2"></ellipse></g>
+            <g class="plant flower" style="--x: 368px; --y: 50px; --petal-color:#F0B0D4;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 102"></path><g transform="translate(0,100)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant sprout" style="--x: 413px; --y: 53px; --leaf-color:rgba(138,176,154,.78);"><path class="stem" d="M0 150 L0 112"></path><ellipse class="leaf" cx="-11" cy="116" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="114" rx="11" ry="6.2"></ellipse></g>
           </svg>
         </div>
 
         <div class="mt-24 flex justify-center w-full" style="margin-top: calc(4rem - 12px);">
-          <button class="clickable-action clickable-element group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
-                  data-next="screen-topics">
+          <button class="clickable-action clickable-element group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10" data-next="screen-topics">
             <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
           </button>
         </div>
@@ -666,9 +423,7 @@
             </h2>
           </div>
         </div>
-
         <div id="topic-list" class="mt-2 flex-1 w-full flex flex-col space-y-4"></div>
-
         <footer class="mt-16 pb-10 text-center opacity-40">
           <p class="text-[10px] font-sans text-mainFont uppercase tracking-[0.4em] font-black">Faith & Promise • On-Sesang Ministry</p>
         </footer>
@@ -680,421 +435,96 @@
       <!-- 4. Quiz Screen -->
       <section id="screen-quiz" class="screen w-full h-full animate-fade-in"></section>
 
-<section id="screen-ending" class="screen w-full">
-  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
+      <!-- 5. Ending Screen -->
+      <section id="screen-ending" class="screen w-full">
+        <div class="ending-wrap">
+          <div class="ending-top-spacer"></div>
+          <div class="ending-hero" aria-hidden="true">
+            <div class="halo-soft" aria-hidden="true"></div>
+            <svg class="ending-sprout" viewBox="0 0 220 220" role="img" aria-label="흙 속에서 자라나는 새싹">
+              <defs>
+                <linearGradient id="leafGradL" x1="60" y1="70" x2="120" y2="118" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(150,220,134,0.94)"/><stop offset="1" stop-color="rgba(104,184,112,0.94)"/></linearGradient>
+                <linearGradient id="leafGradR" x1="160" y1="70" x2="100" y2="118" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(146,216,132,0.94)"/><stop offset="1" stop-color="rgba(98,178,108,0.94)"/></linearGradient>
+                <linearGradient id="stemGrad" x1="110" y1="90" x2="110" y2="170" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(118,194,118,0.94)"/><stop offset="1" stop-color="rgba(86,158,100,0.94)"/></linearGradient>
+                <linearGradient id="soilBase" x1="70" y1="172" x2="154" y2="208" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgb(118, 92, 78)"/><stop offset="1" stop-color="rgb(102, 76, 64)"/></linearGradient>
+                <linearGradient id="soilEdge" x1="70" y1="170" x2="156" y2="214" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(0,0,0,0.08)"/><stop offset="1" stop-color="rgba(0,0,0,0.14)"/></linearGradient>
+                <filter id="sproutSoftDepth" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1" stdDeviation="1.05" flood-color="rgba(0,0,0,0.12)"/></filter>
+              </defs>
 
-  <style>
-    /* ✅ inactive면 숨김(스크롤로 튀어나오는 버그 방지) */
-    #screen-ending{ display:none !important; }
-    #screen-ending.active{
-      display:flex !important;
-      flex-direction:column;
-      min-height: 100svh;
-      height: 100svh;
-      font-family:"Spoqa Han Sans Neo","Pretendard","ui-sans-serif","system-ui","-apple-system","BlinkMacSystemFont",sans-serif;
-    }
+              <g filter="url(#sproutSoftDepth)">
+                <animateTransform attributeName="transform" type="rotate" values="-0.28 110 118; 0.28 110 118; -0.28 110 118" dur="7.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
+                <path d="M110 172 C110 150,110 124,110 94" fill="none" stroke="url(#stemGrad)" stroke-width="9.0" stroke-linecap="round"/>
+                <path d="M110 172 C110 150,110 124,110 94" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="3.8" stroke-linecap="round" opacity="0.46"/>
 
-    .ending-wrap{
-      position: relative;
-      width: 100%;
-      flex: 1 1 auto;
-      min-height: 100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      overflow:hidden;
-    }
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" values="-0.35 110 94; 0.35 110 94; -0.35 110 94" dur="7.2s" begin="0.18s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/>
+                  <animateTransform attributeName="transform" additive="sum" type="translate" values="0 0; 0 -0.35; 0 0.15; 0 0" dur="2.8s" begin="0.42s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.42;0.72;1" keySplines="0.22 1 0.36 1; 0.2 0 0.2 1; 0.22 1 0.36 1"/>
+                  <path d="M110 94 C76 64,40 78,42 104 C66 128,96 126,110 94 Z" fill="url(#leafGradL)"/>
+                  <path d="M110 94 C144 64,180 78,178 104 C154 128,124 126,110 94 Z" fill="url(#leafGradR)"/>
+                  <path d="M86 94 C70 84,58 90,54 102" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="5" stroke-linecap="round"/>
+                  <path d="M134 94 C150 84,162 90,166 102" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
+                </g>
+              </g>
 
-    .ending-top-spacer{
-      height: calc(env(safe-area-inset-top) + 18px);
-      width: 100%;
-      flex: 0 0 auto;
-    }
+              <!-- ✅ 엔딩 흙이 줄기 밑을 3px 더 덮기: soil 그룹을 위로 3px 이동 -->
+              <g transform="translate(0,-3)">
+                <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
+                  <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="url(#soilBase)"/>
 
-    /* =========================
-       Hero / Halo (Silk)
-       ========================= */
-    .ending-hero{
-      position: relative;
-      margin-top: 8px;
-      display: grid;
-      place-items: center;
-      isolation: isolate;
-      flex: 0 0 auto;
-    }
+                  <!-- ✅ 엔딩 흙 하이라이트: 두께/강도/오퍼시티 2단계↑ + 더 자연스럽게(부드러운 언더레이 1겹 추가), 둥근 라인 유지 -->
+                  <!-- soft underlay -->
+                  <path d="M74 186 Q92 168 110 172 Q128 176 146 188"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.07)"
+                        stroke-width="7.4"
+                        stroke-linecap="round"
+                        opacity="0.22"/>
+                  <!-- main highlight -->
+                  <path d="M74 186 Q92 168 110 172 Q128 176 146 188"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.14)"
+                        stroke-width="4.6"
+                        stroke-linecap="round"
+                        opacity="0.54"/>
 
-    /* ✅ 헤일로: “아주 약간만” 더 티나게 */
-    .halo-soft{
-      position:absolute;
-      left:50%;
-      top: -2px; /* 요청: 살짝 아래로 */
-      transform: translateX(-50%);
-      width: 362px;
-      height: 276px;
-      border-radius: 999px;
-      pointer-events:none;
-      z-index:0;
+                  <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="none" stroke="url(#soilEdge)" stroke-width="2.4" opacity="0.55" stroke-linejoin="round"/>
+                </g>
+              </g>
+            </svg>
+          </div>
 
-      background:
-        radial-gradient(closest-side at 50% 44%,
-          rgba(255,255,255,0.22) 0%,
-          rgba(244,240,255,0.18) 36%,
-          rgba(210,200,242,0.10) 58%,
-          rgba(0,0,0,0.00) 78%);
+          <div class="ending-strip">
+            <div class="ending-growline"></div>
+            <div class="ending-text">
+              <div class="ending-line">오늘도 말씀을 마음에 심었어요</div>
+              <div class="ending-line" style="margin-top: 12px;">내일도 이어서 함께 암송해요</div>
+            </div>
+          </div>
 
-      filter: blur(1.20px);
-      opacity: 0.94;
+          <div class="ending-push"></div>
 
-      animation: haloBreathSoft 6.1s ease-in-out infinite;
-      will-change: opacity, filter, transform;
-    }
+          <div class="ending-cta">
+            <button id="ending-home-btn" class="clickable-element ending-home-btn flex items-center justify-center">
+              <span>홈으로</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-    @keyframes haloBreathSoft{
-      0%   { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
-      50%  { opacity: 0.96; filter: blur(0.95px) brightness(1.03); transform: translateX(-50%) scale(1.014); }
-      100% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
-    }
-
-    /* ✅ 실크 결(도트 대신): ‘점무늬’ 느낌 제거 */
-    .halo-soft::after{
-      content:"";
-      position:absolute;
-      inset:-8px;
-      border-radius: 999px;
-      pointer-events:none;
-
-      background:
-        linear-gradient(115deg,
-          rgba(255,255,255,0.00) 0%,
-          rgba(255,255,255,0.05) 18%,
-          rgba(255,255,255,0.00) 36%,
-          rgba(255,255,255,0.035) 52%,
-          rgba(255,255,255,0.00) 70%,
-          rgba(255,255,255,0.03) 84%,
-          rgba(255,255,255,0.00) 100%),
-        linear-gradient(18deg,
-          rgba(210,200,242,0.00) 0%,
-          rgba(210,200,242,0.05) 26%,
-          rgba(210,200,242,0.00) 52%,
-          rgba(210,200,242,0.035) 74%,
-          rgba(210,200,242,0.00) 100%);
-
-      opacity: 0.18;
-      filter: blur(0.55px);
-
-      -webkit-mask-image: radial-gradient(closest-side at 50% 50%,
-        rgba(0,0,0,1) 52%,
-        rgba(0,0,0,0.85) 62%,
-        rgba(0,0,0,0.0) 80%);
-              mask-image: radial-gradient(closest-side at 50% 50%,
-        rgba(0,0,0,1) 52%,
-        rgba(0,0,0,0.85) 62%,
-        rgba(0,0,0,0.0) 80%);
-
-      animation: haloSilkDrift 7.6s ease-in-out infinite;
-      will-change: opacity, transform;
-    }
-
-    @keyframes haloSilkDrift{
-      0%   { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
-      50%  { transform: rotate(0.6deg)  scale(1.02); opacity: 0.20; }
-      100% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
-    }
-
-    .ending-sprout{
-      width: 232px;
-      height: 232px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* =========================
-       Strip group
-       ========================= */
-    .ending-strip{
-      width: 100%;
-      margin-top: 18px;
-      padding: 0 18px;
-      transform: translateY(55px);
-      flex: 0 0 auto;
-    }
-
-    .ending-growline{
-      width: 84px;
-      height: 2px;
-      margin: 0 auto 22px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.20);
-      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
-    }
-
-    .ending-text{
-      font-weight: 600;
-      color: rgba(61,43,41,0.72);
-      letter-spacing: 0.018em;
-      line-height: 1.86;
-      font-size: 20px;
-    }
-
-    .ending-line{
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ending-push{ flex: 1 1 auto; width:100%; min-height: 8px; }
-
-    /* =========================
-       CTA bottom fixed
-       ========================= */
-    .ending-cta{
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      padding: 0 16px;
-      padding-bottom: calc(env(safe-area-inset-bottom) + 64px);
-      z-index: 3;
-    }
-
-    .ending-home-btn{
-      width: 100%;
-      padding: 24px 18px;
-      border-radius: 28px;
-      background: linear-gradient(135deg,
-        rgba(122, 103, 95, 0.40) 0%,
-        rgba(122, 103, 95, 0.26) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.36);
-      box-shadow:
-        0 14px 28px -20px rgba(40, 30, 45, 0.24),
-        0 10px 18px -22px rgba(122, 103, 95, 0.26),
-        inset 0 1px 0 rgba(255,255,255,0.32),
-        inset 0 -2px 0 rgba(0,0,0,0.09);
-      color: rgba(61,43,41,0.92);
-    }
-    .ending-home-btn span{
-      font-weight: 600;
-      font-size: 20px;
-      letter-spacing: -0.004em;
-    }
-
-    /* ✅ 엔딩 진입 시 요소 스르륵 등장(천천히 + 스태거) */
-    #screen-ending .ending-hero,
-    #screen-ending .ending-strip,
-    #screen-ending .ending-cta{
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 780ms cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform;
-    }
-    #screen-ending.ending-enter .ending-hero{
-      opacity:1; transform: translateY(0);
-      transition-delay: 0ms;
-    }
-    #screen-ending.ending-enter .ending-strip{
-      opacity:1; transform: translateY(55px); /* 기존 위치 유지 */
-      transition-delay: 140ms;
-    }
-    #screen-ending.ending-enter .ending-cta{
-      opacity:1; transform: translateY(0);
-      transition-delay: 260ms;
-    }
-  </style>
-
-  <div class="ending-wrap">
-    <div class="ending-top-spacer"></div>
-
-    <div class="ending-hero" aria-hidden="true">
-      <div class="halo-soft" aria-hidden="true"></div>
-
-      <svg class="ending-sprout" viewBox="0 0 220 220" role="img" aria-label="흙 속에서 자라나는 새싹">
-        <defs>
-          <linearGradient id="leafGradL" x1="60" y1="70" x2="120" y2="118" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgba(150,220,134,0.94)"/>
-            <stop offset="1" stop-color="rgba(104,184,112,0.94)"/>
-          </linearGradient>
-          <linearGradient id="leafGradR" x1="160" y1="70" x2="100" y2="118" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgba(146,216,132,0.94)"/>
-            <stop offset="1" stop-color="rgba(98,178,108,0.94)"/>
-          </linearGradient>
-          <linearGradient id="stemGrad" x1="110" y1="90" x2="110" y2="170" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgba(118,194,118,0.94)"/>
-            <stop offset="1" stop-color="rgba(86,158,100,0.94)"/>
-          </linearGradient>
-
-          <linearGradient id="soilBase" x1="70" y1="172" x2="154" y2="208" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgb(118, 92, 78)"/>
-            <stop offset="1" stop-color="rgb(102, 76, 64)"/>
-          </linearGradient>
-
-          <!-- ✅ 흙 하이라이트: 얇고 연하게(과한 광택 금지) -->
-          <linearGradient id="soilSubtleHL" x1="78" y1="164" x2="150" y2="208" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgba(255,255,255,0.07)"/>
-            <stop offset="0.35" stop-color="rgba(255,255,255,0.035)"/>
-            <stop offset="1" stop-color="rgba(255,255,255,0.00)"/>
-          </linearGradient>
-
-          <linearGradient id="soilEdge" x1="70" y1="170" x2="156" y2="214" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="rgba(0,0,0,0.08)"/>
-            <stop offset="1" stop-color="rgba(0,0,0,0.14)"/>
-          </linearGradient>
-
-          <filter id="sproutSoftDepth" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="1" stdDeviation="1.05" flood-color="rgba(0,0,0,0.12)"/>
-          </filter>
-        </defs>
-
-        <!-- ✅ 잎+줄기: 바운스 제거(오버슈트/스쿼시 제거), 살랑만 -->
-        <g filter="url(#sproutSoftDepth)">
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            values="-0.28 110 118; 0.28 110 118; -0.28 110 118"
-            dur="7.8s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
-
-          <path d="M110 172 C110 150,110 124,110 94"
-                fill="none"
-                stroke="url(#stemGrad)"
-                stroke-width="9.0"
-                stroke-linecap="round"/>
-
-          <path d="M110 172 C110 150,110 124,110 94"
-                fill="none"
-                stroke="rgba(255,255,255,0.09)"
-                stroke-width="3.8"
-                stroke-linecap="round"
-                opacity="0.46"/>
-
-          <g>
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              values="-0.35 110 94; 0.35 110 94; -0.35 110 94"
-              dur="7.2s"
-              begin="0.18s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.5;1"
-              keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/>
-
-            <animateTransform
-              attributeName="transform"
-              additive="sum"
-              type="translate"
-              values="0 0; 0 -0.35; 0 0.15; 0 0"
-              dur="2.8s"
-              begin="0.42s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.42;0.72;1"
-              keySplines="0.22 1 0.36 1; 0.2 0 0.2 1; 0.22 1 0.36 1"/>
-
-            <path d="M110 94 C76 64,40 78,42 104 C66 128,96 126,110 94 Z"
-                  fill="url(#leafGradL)"/>
-            <path d="M110 94 C144 64,180 78,178 104 C154 128,124 126,110 94 Z"
-                  fill="url(#leafGradR)"/>
-
-            <path d="M86 94 C70 84,58 90,54 102"
-                  fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M134 94 C150 84,162 90,166 102"
-                  fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
-          </g>
-        </g>
-
-        <!-- 흙 -->
-        <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
-          <path d="M56 188
-                   Q64 158 92 146
-                   Q103 141 110 144
-                   Q117 141 128 146
-                   Q156 158 164 188
-                   Q168 208 152 220
-                   Q136 232 120 228
-                   Q114 226 110 224
-                   Q106 226 100 228
-                   Q84 232 68 220
-                   Q52 208 56 188 Z"
-                fill="url(#soilBase)"/>
-
-          <!-- ✅ 흙 하이라이트: 얇은 초승달 곡선(Stroke) + 아주 약하게 -->
-          <path d="M74 186
-                   Q92 168 110 172
-                   Q128 176 146 188"
-                fill="none"
-                stroke="rgba(255,255,255,0.055)"
-                stroke-width="3.0"
-                stroke-linecap="round"
-                opacity="0.55"/>
-
-          <path d="M56 188
-                   Q64 158 92 146
-                   Q103 141 110 144
-                   Q117 141 128 146
-                   Q156 158 164 188
-                   Q168 208 152 220
-                   Q136 232 120 228
-                   Q114 226 110 224
-                   Q106 226 100 228
-                   Q84 232 68 220
-                   Q52 208 56 188 Z"
-                fill="none"
-                stroke="url(#soilEdge)"
-                stroke-width="2.4"
-                opacity="0.55"
-                stroke-linejoin="round"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="ending-strip">
-      <div class="ending-growline"></div>
-      <div class="ending-text">
-        <div class="ending-line">오늘도 말씀을 마음에 심었어요</div>
-        <div class="ending-line" style="margin-top: 12px;">내일도 이어서 함께 암송해요</div>
-      </div>
-    </div>
-
-    <div class="ending-push"></div>
-
-    <div class="ending-cta">
-      <button id="ending-home-btn" class="clickable-element ending-home-btn flex items-center justify-center">
-        <span>홈으로</span>
-      </button>
     </div>
   </div>
 
   <script>
-    (function(){
-      const btn = document.getElementById("ending-home-btn");
-      if(!btn) return;
-
-      btn.addEventListener("click", function(){
-        if (typeof performAction === "function" && typeof navigateTo === "function") {
-          performAction(btn, () => navigateTo("screen-intro"));
-        } else {
-          location.reload();
-        }
-      });
-    })();
-  </script>
-</section>
-
-  <script>
     const BIBLE_VERSES = [
-      { id: "salvation", topic: "구원의 확신", reference: "요한일서 5:11-12", content: "또 증거는 이것이니\n하나님이 우리에게\n영생을 주신 것과\n이 생명이 그의 아들 안에\n있는 그것이니라\n아들이 있는 자에게는\n생명이 있고\n하나님의 아들이\n없는 자에게는\n생명이 없느니라", description: "영원한 생명의 약속" },
-      { id: "prayer", topic: "기도 응답의 확신", reference: "요한복음 16:24", content: "지금까지는 너희가\n내 이름으로\n아무 것도 구하지\n아니하였으나\n구하라 그리하면 받으리니\n너희 기쁨이 충만하리라", description: "예수님의 이름으로 구하는 기쁨" },
-      { id: "victory", topic: "승리의 확신", reference: "고린도전서 10:13", content: "사람이 감당할\n시험 밖에는\n너희가 당한 것이 없나니\n오직 하나님은 미쁘사\n너희가 감당하지 못할\n시험 당함을\n허락하지 아니하시고\n시험 당할 즈음에\n또한 피할 길을 내사\n너희로 능히\n감당하게 하시느니라", description: "피할 길을 내시는 하나님" },
-      { id: "forgiveness", topic: "사죄의 확신", reference: "요한일서 1:9", content: "만일 우리가\n우리 죄를 자백하면\n그는 미쁘시고 의로우사\n우리 죄를 사하시며\n우리를 모든 불의에서\n깨끗하게 하실 것이요", description: "사죄와 정결의 은혜" },
-      { id: "guidance", topic: "인도의 확신", reference: "잠언 3:5-6", content: "너는 마음을 다하여\n여호와를 신뢰하고\n네 명철을\n의지하지 말라\n너는 범사에 그를 인정하라\n그리하면 네 길을\n지도하시리라", description: "길을 지도하시리라" }
+      { id: "salvation", topic: "구원의 확신", reference: "요한일서 5:11-12", content: "또 증거는 이것이니\n하나님이 우리에게\n영생을 주신 것과\n이 생명이 그의 아들 안에\n있는 그것이니라\n아들이 있는 자에게는\n생명이 있고\n하나님의 아들이\n없는 자에게는\n생명이 없느니라" },
+      { id: "prayer", topic: "기도 응답의 확신", reference: "요한복음 16:24", content: "지금까지는 너희가\n내 이름으로\n아무 것도 구하지\n아니하였으나\n구하라 그리하면 받으리니\n너희 기쁨이 충만하리라" },
+      { id: "victory", topic: "승리의 확신", reference: "고린도전서 10:13", content: "사람이 감당할\n시험 밖에는\n너희가 당한 것이 없나니\n오직 하나님은 미쁘사\n너희가 감당하지 못할\n시험 당함을\n허락하지 아니하시고\n시험 당할 즈음에\n또한 피할 길을 내사\n너희로 능히\n감당하게 하시느니라" },
+      { id: "forgiveness", topic: "사죄의 확신", reference: "요한일서 1:9", content: "만일 우리가\n우리 죄를 자백하면\n그는 미쁘시고 의로우사\n우리 죄를 사하시며\n우리를 모든 불의에서\n깨끗하게 하실 것이요" },
+      { id: "guidance", topic: "인도의 확신", reference: "잠언 3:5-6", content: "너는 마음을 다하여\n여호와를 신뢰하고\n네 명철을\n의지하지 말라\n너는 범사에 그를 인정하라\n그리하면 네 길을\n지도하시리라" }
     ];
 
     let currentVerse = null;
+    let quiz = null;
 
     function performAction(element, callback) {
       if (element.classList.contains("is-pressing")) return;
@@ -1107,25 +537,29 @@
 
     function navigateTo(screenId) {
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-
       const target = document.getElementById(screenId);
       if (target) {
-        // ✅ 엔딩 재진입 시 애니메이션 리셋
         target.classList.remove("ending-enter");
-
         target.classList.add("active");
         window.scrollTo(0, 0);
         lucide.createIcons();
 
         if (screenId === "screen-intro") restartGardenAnim();
 
-        // ✅ 엔딩 진입 시: 스르륵 등장 트리거
         if (screenId === "screen-ending") {
-          requestAnimationFrame(() => {
-            target.classList.add("ending-enter");
-          });
+          target.classList.remove("ending-enter");
+          void target.offsetWidth;
+          requestAnimationFrame(() => { target.classList.add("ending-enter"); });
         }
       }
+    }
+
+    function restartGardenAnim() {
+      const wrap = document.getElementById("garden-wrap");
+      if (!wrap) return;
+      wrap.classList.remove("play");
+      void wrap.offsetWidth;
+      wrap.classList.add("play");
     }
 
     function initNavigation() {
@@ -1135,37 +569,37 @@
           performAction(this, () => navigateTo(next));
         });
       });
-
       document.querySelectorAll(".nav-back").forEach(btn => {
         btn.addEventListener("click", function () {
           const to = this.getAttribute("data-to");
           if (to) performAction(this, () => navigateTo(to));
         });
       });
+      const homeBtn = document.getElementById("ending-home-btn");
+      if (homeBtn) {
+        homeBtn.addEventListener("click", function(){
+          performAction(this, () => navigateTo("screen-intro"));
+        });
+      }
     }
 
     function initTopics() {
       const list = document.getElementById("topic-list");
       if (!list) return;
       list.innerHTML = "";
-
       BIBLE_VERSES.forEach((verse, index) => {
         const card = document.createElement("button");
-        card.className =
-          "topic-card clickable-element w-full group glass-card p-6 rounded-[2.2rem] flex items-center justify-between text-left relative overflow-hidden list-item-shadow border-white/10";
+        card.className = "topic-card clickable-element w-full group glass-card p-6 rounded-[2.2rem] flex items-center justify-between text-left relative overflow-hidden list-item-shadow border-white/10";
         card.innerHTML = `
           <div class="flex items-center space-x-6 relative z-10 flex-1">
-            <span class="text-[20px] font-classic font-black text-mainFont/45 tabular-nums tracking-tight transition-colors">0${index + 1}</span>
+            <span class="text-[20px] font-classic font-black text-mainFont/45 tabular-nums tracking-tight">0${index + 1}</span>
             <div class="flex flex-col overflow-hidden">
-              <h3 class="text-[22px] font-classic font-bold text-mainFont tracking-tight transition-colors truncate">${escapeHTML(verse.topic)}</h3>
+              <h3 class="text-[22px] font-classic font-bold text-mainFont tracking-tight truncate">${escapeHTML(verse.topic)}</h3>
               <p class="text-[13px] text-mainFont/40 font-sans font-bold tracking-wider uppercase mt-0.5">${escapeHTML(verse.reference)}</p>
             </div>
           </div>
-          <div class="bg-white/15 p-3 rounded-full flex-shrink-0 border border-white/20">
-            <i data-lucide="chevron-right" class="text-mainFont/30" size="18"></i>
-          </div>
+          <div class="bg-white/15 p-3 rounded-full flex-shrink-0 border border-white/20"><i data-lucide="chevron-right" class="text-mainFont/30" size="18"></i></div>
         `;
-
         card.addEventListener("click", function () {
           performAction(this, () => {
             currentVerse = verse;
@@ -1173,7 +607,6 @@
             navigateTo("screen-study");
           });
         });
-
         list.appendChild(card);
       });
     }
@@ -1181,7 +614,6 @@
     function renderStudy() {
       const study = document.getElementById("screen-study");
       if (!study) return;
-
       study.innerHTML = `
         <div class="mb-2">
           <button class="nav-back clickable-element flex items-center space-x-1 text-mainFont/40 py-3 px-1" onclick="performAction(this, () => navigateTo('screen-topics'))">
@@ -1196,23 +628,16 @@
           </div>
 
           <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 study-card-shadow flex flex-col justify-center items-center min-h-[440px]">
-            <!-- ✅ 본문+인용 그룹화 + 15px 위로 -->
             <div class="study-text-pack w-full flex flex-col items-center text-center">
-              <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line break-keep">
-                ${escapeHTML(currentVerse.content)}
-              </p>
-
-              <!-- ✅ 인용도 본문과 같은 크기(1.7rem) -->
-              <p class="mt-10 text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont break-keep">
-                ${escapeHTML(currentVerse.reference)}
-              </p>
+              <p class="text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont whitespace-pre-line break-keep">${escapeHTML(currentVerse.content)}</p>
+              <p class="mt-9 text-[1.7rem] font-serif font-bold leading-[1.9] text-mainFont break-keep">${escapeHTML(currentVerse.reference)}</p>
             </div>
           </div>
         </div>
 
         <div class="mt-10 pb-8 w-full">
           <button class="clickable-element w-full btn-primary py-5 rounded-[1.8rem] flex items-center justify-center"
-                  onclick="performAction(this, () => { startQuiz(); navigateTo('screen-quiz'); })">
+            onclick="performAction(this, () => { startQuiz(); navigateTo('screen-quiz'); })">
             <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">퀴즈 시작</span>
           </button>
         </div>
@@ -1220,68 +645,31 @@
       lucide.createIcons();
     }
 
-    function restartGardenAnim() {
-      const wrap = document.getElementById("garden-wrap");
-      if (!wrap) return;
-      wrap.classList.remove("play");
-      void wrap.offsetWidth;
-      wrap.classList.add("play");
-    }
-
-    /* =========================
-       QUIZ
-       ========================= */
-    let quiz = null;
-
-    // ✅ 완료 후 엔딩 전환(접힘 화면 여운 +0.7초)
-    const ENDING_TRANSITION_DELAY = 1520;
-
-    function startQuiz(){
+    function startQuiz() {
       quiz = buildQuizFromVerse(currentVerse, 10);
       renderQuiz();
     }
 
-    function buildQuizFromVerse(verse, blankCount){
+    function buildQuizFromVerse(verse, blankCount) {
       const lines = verse.content.split("\n");
       const quoteLine = verse.reference;
-
       const tokenize = (str) => str.split(/\s+/).map(t => t.trim()).filter(Boolean);
-
       const lineTokens = lines.map(tokenize);
       const quoteTokens = tokenize(quoteLine);
 
       const flat = [];
-      lineTokens.forEach((arr, lineIdx) => {
-        arr.forEach((tok, tokIdx) => {
-          flat.push({ where:"body", lineIdx, tokIdx, tok });
-        });
-      });
-      quoteTokens.forEach((tok, tokIdx) => {
-        flat.push({ where:"quote", lineIdx: 999, tokIdx, tok });
-      });
+      lineTokens.forEach((arr, lineIdx) => arr.forEach((tok, tokIdx) => flat.push({ where: "body", lineIdx, tokIdx, tok })));
+      quoteTokens.forEach((tok, tokIdx) => flat.push({ where: "quote", lineIdx: 999, tokIdx, tok }));
 
-      const isMeaningful = (t) => {
-        if (!t) return false;
-        const pureSymbol = /^[\-\–—\(\)\[\]{}"“”'‘’.,!?]+$/.test(t);
-        if (pureSymbol) return false;
-        return t.replace(/[^\w가-힣:.-]/g,"").length >= 2;
-      };
-
-      const candidates = flat
-        .map((x, idx) => ({...x, idx}))
-        .filter(x => isMeaningful(x.tok));
-
+      const isMeaningful = (t) => t && !/^[\-\–—\(\)\[\]{}"“”'‘’.,!?]+$/.test(t) && t.replace(/[^\w가-힣:.-]/g,"").length >= 2;
+      const candidates = flat.map((x, idx) => ({ ...x, idx })).filter(x => isMeaningful(x.tok));
       const pickCount = Math.min(blankCount, candidates.length);
-
-      const picked = shuffle([...candidates]).slice(0, pickCount)
-        .sort((a,b) => a.idx - b.idx)
-        .map((x, order) => ({
-          id: order,
-          correct: x.tok,
-          filled: null,
-          meta: { idx: x.idx, where: x.where, lineIdx: x.lineIdx, tokIdx: x.tokIdx }
-        }));
-
+      const picked = shuffle([...candidates]).slice(0, pickCount).sort((a, b) => a.idx - b.idx).map((x, order) => ({
+        id: order,
+        correct: x.tok,
+        filled: null,
+        meta: { idx: x.idx, where: x.where, lineIdx: x.lineIdx, tokIdx: x.tokIdx }
+      }));
       const blankByFlatIdx = new Map();
       picked.forEach(b => blankByFlatIdx.set(b.meta.idx, b.id));
 
@@ -1298,161 +686,118 @@
         active: 0,
         completed: false,
         dimmedWrong: new Set(),
-        didScheduleEnding: false,
+        didScheduleEnding: false
       };
     }
 
-    function renderQuiz(){
+    function renderQuiz() {
       const quizEl = document.getElementById("screen-quiz");
       if (!quizEl || !quiz) return;
 
       const total = quiz.blanks.length;
       const done = quiz.blanks.filter(b => b.filled !== null).length;
-      const progressPct = total === 0 ? 0 : Math.round((done/total)*100);
+      const progressPct = total === 0 ? 0 : Math.round((done / total) * 100);
       const stepText = `${Math.min(done, total)}/${total}`;
+
+      const needsFix = (quiz.verseId === "prayer" || quiz.verseId === "guidance");
+      const fixWrap = needsFix ? "quiz-tightfix" : "";
 
       quizEl.innerHTML = `
         <div class="pt-2 pb-4">
           <div class="flex items-end justify-between">
             <div class="flex-1">
-              <div class="text-[27px] font-classic font-black text-mainFont/92 tracking-tight truncate">
-                ${escapeHTML(quiz.topic)}
-              </div>
+              <div class="text-[27px] font-classic font-black text-mainFont/92 tracking-tight truncate">${escapeHTML(quiz.topic)}</div>
             </div>
-
             <div class="w-[72px] text-right">
-              <span class="text-[13px] font-sans font-black tracking-[0.08em] text-mainFont/45 tabular-nums">
-                ${stepText}
-              </span>
+              <span class="text-[13px] font-sans font-black tracking-[0.08em] text-mainFont/45 tabular-nums">${stepText}</span>
             </div>
           </div>
-
-          <div class="quiz-progress-rail mt-3">
-            <div class="quiz-progress-bar" style="width:${progressPct}%;"></div>
-          </div>
+          <div class="quiz-progress-rail mt-3"><div class="quiz-progress-bar" style="width:${progressPct}%;"></div></div>
         </div>
 
         <div style="height:4px;"></div>
 
         <div class="flex-1 flex flex-col">
           <div class="relative p-10 glass-card rounded-[3.5rem] border border-white/40 study-card-shadow flex flex-col justify-center items-center min-h-[440px]">
-            <div class="w-full text-center">
+            <div class="w-full text-center ${fixWrap}">
               ${renderQuizBodyHTML()}
               ${renderQuizQuoteHTML()}
             </div>
           </div>
         </div>
 
-        <div class="mt-8 pb-8" id="quiz-choice-area">
-          ${renderChoiceAreaHTML()}
-        </div>
+        <div class="mt-8 pb-8" id="quiz-choice-area">${renderChoiceAreaHTML()}</div>
       `;
 
       lucide.createIcons();
       bindChoiceHandlers();
 
       const choiceArea = document.getElementById("quiz-choice-area");
-
       if (choiceArea && (quiz.completed || quiz.active >= quiz.blanks.length)) {
         requestAnimationFrame(() => choiceArea.classList.add("is-collapsed"));
         scheduleEndingTransition();
       }
     }
 
-    function scheduleEndingTransition(){
-      if (!quiz || quiz.didScheduleEnding) return;
-      quiz.didScheduleEnding = true;
-      setTimeout(() => {
-        navigateTo("screen-ending");
-      }, ENDING_TRANSITION_DELAY);
-    }
-
-    function renderQuizBodyHTML(){
+    function renderQuizBodyHTML() {
       let html = "";
       let flatIdx = 0;
-
       quiz.lineTokens.forEach((tokens) => {
         const lineParts = tokens.map((tok) => {
           const id = quiz.blankByFlatIdx.get(flatIdx);
-          const blank = (id !== undefined) ? quiz.blanks[id] : null;
-
+          const blank = id !== undefined ? quiz.blanks[id] : null;
           const isActive = blank && id === quiz.active;
           const isFilled = blank && blank.filled !== null;
-
           const out = blank
             ? `<span class="quiz-blank ${isFilled ? "is-filled" : ""} ${isActive && !isFilled ? "is-active" : ""}">${isFilled ? escapeHTML(blank.correct) : ""}</span>`
             : escapeHTML(tok);
-
           flatIdx++;
           return out;
         }).join(" ");
-
         const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
         html += `<span class="quiz-line text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">${lineParts}</span>`;
       });
-
       return html;
     }
 
-    function renderQuizQuoteHTML(){
+    function renderQuizQuoteHTML() {
       const bodyTokenCount = quiz.lineTokens.reduce((acc, arr) => acc + arr.length, 0);
       let flatIdx = bodyTokenCount;
-
       const parts = quiz.quoteTokens.map((tok) => {
         const id = quiz.blankByFlatIdx.get(flatIdx);
-        const blank = (id !== undefined) ? quiz.blanks[id] : null;
-
+        const blank = id !== undefined ? quiz.blanks[id] : null;
         const isActive = blank && id === quiz.active;
         const isFilled = blank && blank.filled !== null;
-
         const out = blank
           ? `<span class="quiz-blank ${isFilled ? "is-filled" : ""} ${isActive && !isFilled ? "is-active" : ""}">${isFilled ? escapeHTML(blank.correct) : ""}</span>`
           : escapeHTML(tok);
-
         flatIdx++;
         return out;
       }).join(" ");
-
       const fix = (quiz.verseId === "prayer" || quiz.verseId === "guidance") ? "quiz-fix-lines" : "";
-      return `
-        <div class="mt-10 text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">
-          ${parts}
-        </div>
-      `;
+      return `<div class="mt-10 text-[1.7rem] font-serif font-bold ${fix} text-mainFont break-keep">${parts}</div>`;
     }
 
-    function renderChoiceAreaHTML(){
-      if (quiz.active >= quiz.blanks.length){
-        quiz.completed = true;
-        return ``;
-      }
-
+    function renderChoiceAreaHTML() {
+      if (quiz.active >= quiz.blanks.length) { quiz.completed = true; return ""; }
       const activeBlank = quiz.blanks[quiz.active];
       const choices = generateChoices(activeBlank.correct);
-
-      return `
-        <div class="grid grid-cols-2 gap-3">
-          ${choices.map((w, idx) => {
-            const key = `c_${quiz.active}_${idx}_${w}`;
-            const dim = quiz.dimmedWrong.has(key) ? "is-dimmed" : "";
-            return `
-              <button class="choice-btn clickable-element ${dim}"
-                      data-choice="${escapeAttr(w)}"
-                      data-key="${escapeAttr(key)}">
-                <span class="choice-label">${escapeHTML(w)}</span>
-              </button>
-            `;
-          }).join("")}
-        </div>
-      `;
+      return `<div class="grid grid-cols-2 gap-3">
+        ${choices.map((w, idx) => {
+          const key = `c_${quiz.active}_${idx}_${w}`;
+          const dim = quiz.dimmedWrong.has(key) ? "is-dimmed" : "";
+          return `<button class="choice-btn clickable-element ${dim}" data-choice="${escapeAttr(w)}" data-key="${escapeAttr(key)}">
+            <span class="choice-label">${escapeHTML(w)}</span>
+          </button>`;
+        }).join("")}
+      </div>`;
     }
 
-    function bindChoiceHandlers(){
+    function bindChoiceHandlers() {
       const area = document.getElementById("quiz-choice-area");
       if (!area) return;
-
       area.querySelectorAll("button[data-choice]").forEach(btn => {
-        btn.addEventListener("click", function(){
+        btn.addEventListener("click", function () {
           if (quiz.completed) return;
 
           const choice = this.getAttribute("data-choice");
@@ -1460,14 +805,13 @@
           const activeBlank = quiz.blanks[quiz.active];
           if (!activeBlank) return;
 
-          if (choice !== activeBlank.correct){
+          if (choice !== activeBlank.correct) {
             quiz.dimmedWrong.add(key);
             this.classList.add("is-dimmed");
             return;
           }
 
           this.classList.add("is-correct");
-
           setTimeout(() => {
             activeBlank.filled = activeBlank.correct;
             quiz.active += 1;
@@ -1477,81 +821,51 @@
       });
     }
 
-    function generateChoices(correct){
+    function scheduleEndingTransition() {
+      if (!quiz || quiz.didScheduleEnding) return;
+      quiz.didScheduleEnding = true;
+      setTimeout(() => { navigateTo("screen-ending"); }, 1520);
+    }
+
+    function generateChoices(correct) {
       const unique = new Set();
       unique.add(correct);
 
       const classify = (w) => {
-        const numRef = /^\d{1,2}:\d{1,2}(-\d{1,2})?$/.test(w);
-        const hasBook = /(복음|전서|후서|서|시편|잠언|고린도|요한|로마|갈라디아|에베소|빌립보|골로새)/.test(w);
-        if (numRef) return "numRef";
-        if (hasBook) return "book";
-        if (/^[0-9]+$/.test(w)) return "number";
-        if (/^[가-힣]+$/.test(w)) return "korean";
-        return "other";
+        if (/^\d{1,2}:\d{1,2}(-\d{1,2})?$/.test(w)) return "numRef";
+        if (/(복음|전서|후서|서|시편|잠언|고린도|요한|로마|갈라디아|에베소|빌립보|골로새)/.test(w)) return "book";
+        return /^[가-힣]+$/.test(w) ? "korean" : "other";
       };
 
       const type = classify(correct);
       const targetLen = correct.length;
 
       const verseWords = Array.from(new Set(
-        (currentVerse.content.replace(/\n/g," ").split(/\s+/).map(s=>s.trim()).filter(Boolean))
-          .concat(currentVerse.reference.split(/\s+/).map(s=>s.trim()).filter(Boolean))
+        (currentVerse.content.replace(/\n/g, " ").split(/\s+/).map(s => s.trim()).filter(Boolean))
+        .concat(currentVerse.reference.split(/\s+/).map(s => s.trim()).filter(Boolean))
       ));
 
-      let pool = [];
+      let pool =
+        type === "numRef"
+          ? ["1:1","1:9","3:5-6","5:11-12","10:13","16:24","10:9","11:4","4:7","2:8"]
+          : type === "book"
+            ? ["요한복음","요한일서","요한계시록","고린도전서","고린도후서","로마서","시편","잠언","에베소서","빌립보서","골로새서"]
+            : verseWords.filter(w => classify(w) === type && Math.abs(w.length - targetLen) <= 1);
 
-      if (type === "numRef"){
-        pool = ["1:1","1:9","3:5-6","5:11-12","10:13","16:24","10:9","11:4","4:7","2:8"];
-      } else if (type === "book"){
-        pool = ["요한복음","요한일서","요한계시록","고린도전서","고린도후서","로마서","시편","잠언","에베소서","빌립보서","골로새서"];
-      } else if (type === "korean"){
-        pool = verseWords
-          .filter(w => classify(w) === "korean")
-          .filter(w => Math.abs(w.length - targetLen) <= 1);
+      if (pool.length < 6) pool = pool.concat(["영생","은혜","생명","믿음","구원","말씀","기쁨","확신","사랑","죄","자백","의로","인정","신뢰","지도"]);
 
-        if (pool.length < 6){
-          pool = pool.concat(["영생","은혜","생명","믿음","구원","말씀","기쁨","확신","사랑","죄","자백","의로","인정","신뢰","지도"]);
-        }
-      } else {
-        pool = verseWords.slice();
-      }
+      pool = shuffle(pool.filter(w => w && w !== correct));
+      for (const w of pool) { if (unique.size >= 4) break; unique.add(w); }
 
-      pool = pool.filter(w => w && w !== correct);
-      shuffle(pool);
+      const fallback = shuffle(["영생","은혜","생명","믿음","구원","말씀","기쁨","사랑","확신","인도","사죄","승리","기도","자백","의로"]);
+      for (const w of fallback) { if (unique.size >= 4) break; if (w !== correct) unique.add(w); }
 
-      for (const w of pool){
-        if (unique.size >= 4) break;
-        unique.add(w);
-      }
-
-      const fallback = ["영생","은혜","생명","믿음","구원","말씀","기쁨","사랑","확신","인도","사죄","승리","기도","자백","의로"];
-      shuffle(fallback);
-      for (const w of fallback){
-        if (unique.size >= 4) break;
-        if (w !== correct) unique.add(w);
-      }
-
-      let arr = Array.from(unique);
-      if (!arr.includes(correct)) arr.unshift(correct);
-      arr = arr.slice(0,4);
-
-      const fixed = [];
-      const seen = new Set();
-      for (const w of arr){
-        if (!seen.has(w) && fixed.length < 4){
-          fixed.push(w); seen.add(w);
-        }
-      }
-      while (fixed.length < 4){
-        const w = fallback.find(x => x !== correct && !seen.has(x)) || "말씀";
-        fixed.push(w); seen.add(w);
-      }
-      if (!fixed.includes(correct)) fixed[0] = correct;
-      return shuffle(fixed);
+      let arr = shuffle(Array.from(unique).slice(0, 4));
+      if (!arr.includes(correct)) arr[0] = correct;
+      return shuffle(arr);
     }
 
-    function shuffle(arr){
+    function shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -1559,7 +873,7 @@
       return arr;
     }
 
-    function escapeHTML(str){
+    function escapeHTML(str) {
       return String(str)
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
@@ -1567,23 +881,13 @@
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
     }
-
-    function escapeAttr(str){
-      return escapeHTML(str).replaceAll("\n"," ");
-    }
+    function escapeAttr(str) { return escapeHTML(str).replaceAll("\n"," "); }
 
     document.addEventListener("DOMContentLoaded", () => {
       initTopics();
       initNavigation();
       lucide.createIcons();
       restartGardenAnim();
-
-      const homeBtn = document.getElementById("ending-home-btn");
-      if (homeBtn){
-        homeBtn.addEventListener("click", function(){
-          performAction(this, () => navigateTo("screen-intro"));
-        });
-      }
     });
   </script>
 </body>
