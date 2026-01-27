@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>약속의 말씀: 내 마음에 쏙쏙</title>
+<title>온세상교회 성경암송</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
@@ -41,7 +41,25 @@
   </script>
 
   <style>
-    :root { --themeBg:#a595c8; --mainFont:#3d2b29; }
+    :root{
+      --themeBg:#a595c8;
+      --mainFont:#3d2b29;
+
+      /* =========================
+         ✅ 엔딩 화면: 수치 조절 전용(여기만 바꾸면 됨)
+         ========================= */
+      --endingSproutX: 0px;
+      --endingSproutY: 0px;
+
+      --endingGlowX: 0px;
+      --endingGlowY: 10px;
+
+      --endingRadialX: 0px;
+      --endingRadialY: -20px;
+
+      --endingStripX: 0px;
+      --endingStripY: 28px;
+    }
 
     body{
       background-color:var(--themeBg);
@@ -59,47 +77,30 @@
     h1,h2,h3{ font-family:"Noto Serif KR", serif; }
     .bible-text{ font-family:"Gowun Batang", serif; }
     .break-keep{ word-break: keep-all; }
-  
-.glass-card{
-  background: rgba(255, 255, 255, 0.17);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 
- border: 0.5px solid rgba(255, 255, 255, 0.20);
-
-
-
-
-  box-shadow:
-    /* ✅ 유리 엣지 (얇은 테두리 착시) */
-    inset 0 0 0 1px rgba(255,255,255,0.40),
-    inset 0 1px 0 rgba(255,255,255,0.28),
-
-    /* ✅ 카드가 뜨는 핵심 그림자 */
-    0 26px 40px -26px rgba(40,30,45,0.34),
-    0 12px 22px -20px rgba(40,30,45,0.22),
-
-    /* ✅ 바닥에 살짝 닿아있는 접지 그림자 */
-    0 4px 8px -6px rgba(40,30,45,0.12);
-}
-
-
-
-
-
+    .glass-card{
+      background: rgba(255, 255, 255, 0.19);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 0.5px solid rgba(255, 255, 255, 0.34);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.40),
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        0 26px 40px -26px rgba(40,30,45,0.34),
+        0 12px 22px -20px rgba(40,30,45,0.22),
+        0 4px 8px -6px rgba(40,30,45,0.12);
+    }
 
     .list-item-shadow{ box-shadow: 0 2px 12px -4px rgba(40, 30, 45, 0.06); }
 
-.study-card-shadow{
-box-shadow:
-  0 20px 36px -22px rgba(40,30,45,0.28),
-  0 12px 24px -20px rgba(40,30,45,0.22),
-  inset 0 1px 0 rgba(255,255,255,0.34);
+    .study-card-shadow{
+      box-shadow:
+        0 20px 36px -22px rgba(40,30,45,0.28),
+        0 12px 24px -20px rgba(40,30,45,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.34);
+    }
 
-}
-
-
-    /* ✅ Study: 본문+인용 블록을 "기존보다 5px 아래로" (translateY -18px → -13px) */
+    /* ✅ Study: 본문+인용 블록을 "기존보다 5px 아래로" */
     .study-text-pack{ transform: translateY(5px); }
 
     .btn-primary{
@@ -138,11 +139,14 @@ box-shadow:
     .garden .petal{ fill: var(--petal-color); }
     .garden .center{ fill: rgba(248, 246, 242, .92); }
     .garden .flowerleaf{ fill: var(--baseLeafGreen); }
-    .garden .plant{ opacity: 0; transform: translate(var(--x), var(--y)) translateY(28px) scale(0); transform-origin: 0px 150px; will-change: transform, opacity; }
-
-    /* ✅ 홈: 흙선만 보이는 시간 1초 단축 (delay 1.25s → 0.25s) */
-    #garden-wrap.play .garden .plant{ animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 0.25s forwards; }
-
+    .garden .plant{
+      opacity: 0;
+      transform: translate(var(--x), var(--y)) translateY(28px) scale(0);
+      transform-origin: 0px 150px;
+      will-change: transform, opacity;
+    }
+    /* ✅ 홈 가든 애니메이션 (항상 동일하게 재생) */
+    #garden-wrap.play .garden .plant{ animation: plantRiseSmooth 3.6s cubic-bezier(0.22, 0.90, 0.18, 1.00) 0.37s forwards; }
     @keyframes plantRiseSmooth{
       from{ opacity: 0; transform: translate(var(--x), var(--y)) translateY(28px) scale(0); }
       to{ opacity: 1; transform: translate(var(--x), var(--y)) translateY(0px) scale(1); }
@@ -151,12 +155,11 @@ box-shadow:
     .quiz-progress-rail{ height: 2px; background: rgba(255,255,255,0.20); border-radius: 999px; overflow: hidden; }
     .quiz-progress-bar{ height: 100%; width: 0%; background: rgba(61,43,41,0.40); transition: width 120ms ease; border-radius: 999px; }
 
-    /* ✅ 퀴즈 행간 랜덤 깨짐(진입마다 달라지는 현상) 방지:
-       line-height만 믿지 말고 "줄 자체에 padding"으로 물리 고정 */
+    /* ✅ 퀴즈 행간 랜덤 깨짐 방지 */
     .quiz-line{
       display: block;
       line-height: 1.86;
-      padding: 0.12em 0; /* ← 핵심 */
+      padding: 0.12em 0;
       letter-spacing: -0.01em;
       word-break: keep-all;
       overflow-wrap: normal;
@@ -168,17 +171,14 @@ box-shadow:
       overflow-wrap: normal;
     }
 
-    /* ✅ inline-flex(베이스라인 이슈) 제거 → inline-block로 안정화 */
     .quiz-blank{
       display: inline-block;
       text-align: center;
-
       height: 1.10em;
-      line-height: 1.10em; /* ← 높이=라인높이로 가운데 정렬 */
+      line-height: 1.10em;
       min-width: 2.45em;
       padding: 0 0.60em;
       margin: 0 0.06em;
-
       border-radius: 999px;
       background: rgba(190, 188, 214, 0.88);
       border: none;
@@ -263,14 +263,18 @@ box-shadow:
       pointer-events: none;
     }
 
+    /* =========================
+       ✅ ENDING (최종 반영)
+       ========================= */
     #screen-ending{ display:none !important; }
     #screen-ending.active{
       display:flex !important;
       flex-direction:column;
       min-height: 100svh;
       height: 100svh;
-      font-family:"Spoqa Han Sans Neo","Pretendard",sans-serif;
+      font-family: "Pretendard", ui-sans-serif, system-ui, -apple-system, sans-serif;
     }
+
     .ending-wrap{
       position: relative;
       width: 100%;
@@ -282,82 +286,188 @@ box-shadow:
       text-align:center;
       overflow:hidden;
     }
+
     .ending-top-spacer{ height: calc(env(safe-area-inset-top) + 18px); width: 100%; flex: 0 0 auto; }
-    .ending-hero{ position: relative; margin-top: 8px; display: grid; place-items: center; isolation: isolate; flex: 0 0 auto; }
-    .halo-soft{
-      position:absolute;
-      left:50%;
-      top: -2px;
-      transform: translateX(-50%);
-      width: 362px;
-      height: 276px;
-      border-radius: 999px;
-      pointer-events:none;
-      z-index:0;
-      background: radial-gradient(closest-side at 50% 44%, rgba(255,255,255,0.22) 0%, rgba(244,240,255,0.18) 36%, rgba(210,200,242,0.10) 58%, rgba(0,0,0,0.00) 78%);
-      filter: blur(1.20px);
-      opacity: 0.94;
-      animation: haloBreathSoft 6.1s ease-in-out infinite;
-      will-change: opacity, filter, transform;
+
+    .ending-hero{
+      position: relative;
+      margin-top: 8px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+      flex: 0 0 auto;
+      width: 100%;
     }
-    @keyframes haloBreathSoft{
-      0% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
-      50% { opacity: 0.96; filter: blur(0.95px) brightness(1.03); transform: translateX(-50%) scale(1.014); }
-      100% { opacity: 0.90; filter: blur(1.20px) brightness(1.00); transform: translateX(-50%) scale(0.998); }
-    }
-    .halo-soft::after{
-      content:"";
+
+    /* ✅ 배경 6개 블러 원 */
+    .ending-bubbles{
       position:absolute;
-      inset:-8px;
-      border-radius: 999px;
+      inset: -24px;
       pointer-events:none;
-      background:
-        linear-gradient(115deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.05) 18%, rgba(255,255,255,0.00) 36%, rgba(255,255,255,0.035) 52%, rgba(255,255,255,0.00) 70%, rgba(255,255,255,0.03) 84%, rgba(255,255,255,0.00) 100%),
-        linear-gradient(18deg, rgba(210,200,242,0.00) 0%, rgba(210,200,242,0.05) 26%, rgba(210,200,242,0.00) 52%, rgba(210,200,242,0.035) 74%, rgba(210,200,242,0.00) 100%);
-      opacity: 0.18;
-      filter: blur(0.55px);
-      -webkit-mask-image: radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 52%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.0) 80%);
-      mask-image: radial-gradient(closest-side at 50% 50%, rgba(0,0,0,1) 52%, rgba(0,0,0,0.85) 62%, rgba(0,0,0,0.0) 80%);
-      animation: haloSilkDrift 7.6s ease-in-out infinite;
+      z-index: 0;
+    }
+    .ending-bubble{
+      position:absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      filter: blur(54px);
+      opacity: 0.58;
+      animation: float 5s ease-in-out infinite;
+      will-change: transform;
+      /* ✅ (수정1) 샴페인 골드(노란기↓) */
+      background: rgba(236,224,190,0.12);
+    }
+    @keyframes float{
+      0%,100%{ transform: translateY(0px); }
+      50%{ transform: translateY(-10px); }
+    }
+
+    /* ✅ 중앙 방사형(골드) + Tailwind pulse */
+    .ending-radial{
+      position:absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) translate(var(--endingRadialX), var(--endingRadialY));
+      width: 140%;
+      height: 140%;
+      pointer-events:none;
+      z-index: 0;
+      opacity: 1;
+    }
+
+    /* ✅ 새싹 뒤 글로우(골드 블러 100px, 박동) */
+    .ending-glow{
+      position:absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY));
+      width: 360px;
+      height: 260px;
+      border-radius: 999px;
+      /* ✅ (수정1) 샴페인 골드(노란기↓) */
+      background: rgba(236,224,190,0.14);
+      filter: blur(100px);
+      opacity: 0.92;
+      animation: glowPulse 2.4s ease-in-out infinite;
+      pointer-events:none;
+      z-index: 1; /* ✅ 새싹보다 뒤, 방사형보다 앞 */
       will-change: opacity, transform;
     }
-    @keyframes haloSilkDrift{
-      0% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
-      50% { transform: rotate(0.6deg) scale(1.02); opacity: 0.20; }
-      100% { transform: rotate(-0.4deg) scale(1.00); opacity: 0.16; }
+    @keyframes glowPulse{
+      0%   { opacity: 0.92; transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY)) scale(0.98); }
+      50%  { opacity: 1.00; transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY)) scale(1.02); }
+      100% { opacity: 0.92; transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY)) scale(0.98); }
     }
 
-    .ending-sprout{ width: 232px; height: 232px; position: relative; z-index: 1; }
+    /* ✅ 새싹 (글로우와 "같은 기준점" / 단, 위치값은 따로 조절 가능) */
+    .ending-sprout{
+      width: 232px;
+      height: 232px;
+      position: relative;
+      z-index: 2;
+      transform: translate(var(--endingSproutX), var(--endingSproutY));
+    }
 
-    .ending-strip{ width: 100%; margin-top: 18px; padding: 0 18px; flex: 0 0 auto; }
-    .ending-growline{ width: 84px; height: 2px; margin: 0 auto 22px; border-radius: 999px; background: rgba(255,255,255,0.20); box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
-    .ending-text{ font-weight: 600; color: rgba(61,43,41,0.72); letter-spacing: 0.018em; line-height: 1.86; font-size: 20px; }
-    .ending-line{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* ✅ 스트립: 한 줄 + 홈 슬로건 폰트(Gowun Batang) 동일 적용 + 위치 수치 조절 */
+    .ending-strip{
+      width: 100%;
+      margin-top: 18px;
+      padding: 0 9px;
+      flex: 0 0 auto;
+      transform: translate(var(--endingStripX), var(--endingStripY));
+      z-index: 2;
+    }
+    .ending-growline{
+      width: 84px;
+      height: 2px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.20);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+    .ending-text{
+      font-family: "Gowun Batang", serif;
+      font-weight: 950;
+     color: rgba(48,32,30,0.92);
+      letter-spacing: -0.015em;
+      font-size: clamp(14px, 4.1vw, 16px);
+      line-height: 1.5;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.25);
+
+    }
+    .ending-line{
+      white-space: nowrap;
+    }
     .ending-push{ flex: 1 1 auto; width:100%; min-height: 8px; }
+
     .ending-cta{
       position: absolute;
       left: 0;
       right: 0;
       bottom: 0;
       padding: 0 16px;
-      padding-bottom: calc(env(safe-area-inset-bottom) + 64px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 56px);
       z-index: 3;
     }
-    .ending-home-btn{
-      width: 100%;
-      padding: 24px 18px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(122, 103, 95, 0.40) 0%, rgba(122, 103, 95, 0.26) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.36);
-      box-shadow: 0 14px 28px -20px rgba(40, 30, 45, 0.24), 0 10px 18px -22px rgba(122, 103, 95, 0.26), inset 0 1px 0 rgba(255,255,255,0.32), inset 0 -2px 0 rgba(0,0,0,0.09);
-      color: rgba(61, 43, 41, 0.92);
-    }
-    .ending-home-btn span{ font-weight: 600; font-size: 20px; letter-spacing: -0.004em; }
 
-    #screen-ending .ending-hero,
-    #screen-ending .ending-strip,
+    /* ✅ (수정3) 버튼이 배경에서 살짝 떠 보이게: 두 버튼에만 적용할 추가 쉐도우 */
+    .cta-float-shadow{
+      box-shadow:
+        0 20px 36px -28px rgba(40,30,45,0.34),
+        0 12px 22px -22px rgba(40,30,45,0.22),
+        0 6px 12px -14px rgba(40,30,45,0.12);
+    }
+
+    .ending-home-btn{
+      width: auto;
+      margin: 0 auto;
+    }
+    .ending-home-btn span{
+      font-family: inherit;
+      font-weight: inherit;
+      font-size: inherit;
+      letter-spacing: inherit;
+    }
+
+    /* ✅ 엔딩 등장 애니메이션 */
+    /* (수정1) transform 충돌 해결: strip/radial/glow 위치변수 유지 + 등장 translateY만 "추가" 계산 */
+    #screen-ending .ending-hero{
+      opacity: 0;
+      transform: translateY(34px);
+      transition:
+        opacity 980ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    #screen-ending .ending-strip{
+      opacity: 0;
+      transform: translate(var(--endingStripX), calc(var(--endingStripY) + 34px));
+      transition:
+        opacity 980ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    #screen-ending .ending-radial{
+      opacity: 0;
+      transform: translate(-50%, -50%) translate(var(--endingRadialX), calc(var(--endingRadialY) + 34px));
+      transition:
+        opacity 980ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    #screen-ending .ending-glow{
+      opacity: 0;
+      transform: translate(-50%, -50%) translate(var(--endingGlowX), calc(var(--endingGlowY) + 34px));
+      transition:
+        opacity 980ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
     #screen-ending .ending-cta{
       opacity: 0;
       transform: translateY(34px);
@@ -366,8 +476,11 @@ box-shadow:
         transform 980ms cubic-bezier(0.16, 1, 0.3, 1);
       will-change: opacity, transform;
     }
+
     #screen-ending.ending-enter .ending-hero{ opacity:1; transform: translateY(0); transition-delay: 0ms; }
-    #screen-ending.ending-enter .ending-strip{ opacity:1; transform: translateY(0); transition-delay: 240ms; }
+    #screen-ending.ending-enter .ending-strip{ opacity:1; transform: translate(var(--endingStripX), var(--endingStripY)); transition-delay: 240ms; }
+    #screen-ending.ending-enter .ending-radial{ opacity:1; transform: translate(-50%, -50%) translate(var(--endingRadialX), var(--endingRadialY)); transition-delay: 0ms; }
+    #screen-ending.ending-enter .ending-glow{ opacity:1; transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY)); transition-delay: 0ms; }
     #screen-ending.ending-enter .ending-cta{ opacity:1; transform: translateY(0); transition-delay: 520ms; }
   </style>
 <script type="importmap">
@@ -396,10 +509,11 @@ box-shadow:
           </h1>
 
           <div class="relative px-4 space-y-3" style="margin-top: calc(2.5rem + 2px);">
-            <p class="text-[16px] font-serif font-bold text-mainFont tracking-tight leading-relaxed break-keep">
+            <!-- ✅ (수정3) 홈 슬로건: 한 줄 강제 -->
+            <p class="text-[16px] whitespace-nowrap font-serif font-bold text-mainFont tracking-tight leading-relaxed break-keep">
               "그리스도인의 말씀이 너희 속에 풍성히 거하여"
             </p>
-            <span class="text-[16px] font-serif font-bold text-subFont tracking-tight">- 골로새서 3:16 -</span>
+            <span class="text-[16px] font-serif font-bold text-subFont tracking-tight">골로새서 3:16</span>
           </div>
         </div>
 
@@ -409,7 +523,7 @@ box-shadow:
 
             <!-- Back Row -->
             <g class="plant sprout" style="--x: 18px; --y: 3px; --leaf-color:rgba(128,168,156,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
-            <g class="plant flower" style="--x: 63px; --y: 7px; --petal-color:#AFCFE6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
+            <g class="plant flower" style="--x: 63px; --y: 7px; --petal-color:#AFCFE6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
 
             <g class="plant sprout" style="--x: 106px; --y: 3px; --leaf-color:rgba(120,160,148,.78);"><path class="stem" d="M0 150 L0 108"></path><ellipse class="leaf" cx="-11" cy="112" rx="11" ry="6.2"></ellipse><ellipse class="leaf" cx="11" cy="110" rx="11" ry="6.2"></ellipse></g>
             <g class="plant flower" style="--x: 151px; --y: 7px; --petal-color:#C2B4D6;"><g transform="translate(0,150)"><path class="flowerleaf" d="M0 0 C -10 -18 -28 -26 -42 -12 C -30 4 -12 8 0 0 Z" transform="translate(-2,0)"></path><path class="flowerleaf" d="M0 0 C 10 -18 28 -26 42 -12 C 30 4 -12 8 0 0 Z" transform="translate(2,0)"></path></g><path class="stem" d="M0 150 L0 86"></path><g transform="translate(0,84)"><ellipse class="petal" cx="0" cy="-15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="-6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="0" cy="15.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="6.2" rx="10.3" ry="8.0"/><ellipse class="petal" cx="-12.6" cy="-6.2" rx="10.3" ry="8.0"/><circle class="center" cx="0" cy="0" r="6.7"/></g></g>
@@ -435,7 +549,9 @@ box-shadow:
         </div>
 
         <div class="mt-24 flex justify-center w-full" style="margin-top: calc(4rem - 12px);">
-          <button class="clickable-action clickable-element group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10" data-next="screen-topics">
+          <!-- ✅ (수정3) 홈 도전하기 버튼: 추가 떠있는 shadow 적용 -->
+          <button class="clickable-action clickable-element cta-float-shadow group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10"
+            data-next="screen-topics" type="button">
             <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">도전하기</span>
           </button>
         </div>
@@ -444,7 +560,7 @@ box-shadow:
       <!-- 2. Topics Screen -->
       <section id="screen-topics" class="screen h-full w-full overflow-x-hidden">
         <div class="pt-2 pb-8 flex flex-col items-center relative w-full">
-          <button class="nav-back clickable-element absolute left-0 top-0 flex items-center space-x-1 text-mainFont/40 py-3 px-1" data-to="screen-intro">
+          <button class="nav-back clickable-element absolute left-0 top-0 flex items-center space-x-1 text-mainFont/40 py-3 px-1" data-to="screen-intro" type="button">
             <i data-lucide="chevron-left" size="18"></i>
             <span class="text-[13px] font-sans font-bold tracking-widest">돌아가기</span>
           </button>
@@ -468,57 +584,85 @@ box-shadow:
 
       <!-- 5. Ending Screen -->
       <section id="screen-ending" class="screen w-full">
-        <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css"/>
         <div class="ending-wrap">
           <div class="ending-top-spacer"></div>
+
           <div class="ending-hero" aria-hidden="true">
-            <div class="halo-soft" aria-hidden="true"></div>
+
+            <div class="ending-bubbles" aria-hidden="true">
+              <div class="ending-bubble" style="left:-90px; top:10px; width:360px; height:360px; animation-duration: 5.1s;"></div>
+              <div class="ending-bubble" style="right:-110px; top:24px; width:380px; height:380px; animation-duration: 6.0s;"></div>
+              <div class="ending-bubble" style="left:-70px; bottom:18px; width:340px; height:340px; animation-duration: 4.8s;"></div>
+              <div class="ending-bubble" style="right:-80px; bottom:28px; width:420px; height:420px; animation-duration: 5.7s;"></div>
+              <div class="ending-bubble" style="left:26%; top:108px; width:340px; height:340px; animation-duration: 6.3s;"></div>
+              <div class="ending-bubble" style="right:18%; top:142px; width:320px; height:320px; animation-duration: 5.4s;"></div>
+            </div>
+
+            <div class="ending-radial animate-pulse bg-[radial-gradient(circle,rgba(236,224,190,0.10)_0%,transparent_70%)]"
+                 aria-hidden="true"></div>
+
+            <div class="ending-glow" aria-hidden="true"></div>
+
             <svg class="ending-sprout" viewBox="0 0 220 220" role="img" aria-label="흙 속에서 자라나는 새싹">
               <defs>
-                <linearGradient id="leafGradL" x1="60" y1="70" x2="120" y2="118" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(150,220,134,0.94)"/><stop offset="1" stop-color="rgba(104,184,112,0.94)"/></linearGradient>
-                <linearGradient id="leafGradR" x1="160" y1="70" x2="100" y2="118" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(146,216,132,0.94)"/><stop offset="1" stop-color="rgba(98,178,108,0.94)"/></linearGradient>
-                <linearGradient id="stemGrad" x1="110" y1="90" x2="110" y2="170" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(118,194,118,0.94)"/><stop offset="1" stop-color="rgba(86,158,100,0.94)"/></linearGradient>
-                <linearGradient id="soilBase" x1="70" y1="172" x2="154" y2="208" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgb(118, 92, 78)"/><stop offset="1" stop-color="rgb(102, 76, 64)"/></linearGradient>
-                <linearGradient id="soilEdge" x1="70" y1="170" x2="156" y2="214" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(0,0,0,0.08)"/><stop offset="1" stop-color="rgba(0,0,0,0.14)"/></linearGradient>
-                <filter id="sproutSoftDepth" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="1" stdDeviation="1.05" flood-color="rgba(0,0,0,0.12)"/></filter>
+                <linearGradient id="leafGradL" x1="60" y1="70" x2="120" y2="118" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="rgba(150,220,134,0.94)"/>
+                  <stop offset="1" stop-color="rgba(104,184,112,0.94)"/>
+                </linearGradient>
+                <linearGradient id="leafGradR" x1="160" y1="70" x2="100" y2="118" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="rgba(146,216,132,0.94)"/>
+                  <stop offset="1" stop-color="rgba(98,178,108,0.94)"/>
+                </linearGradient>
+                <linearGradient id="stemGrad" x1="110" y1="90" x2="110" y2="170" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="rgba(118,194,118,0.94)"/>
+                  <stop offset="1" stop-color="rgba(86,158,100,0.94)"/>
+                </linearGradient>
+
+                <linearGradient id="soilBase" x1="70" y1="172" x2="154" y2="208" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="rgb(158, 121, 90)"/>
+                  <stop offset="1" stop-color="rgb(134, 99, 72)"/>
+                </linearGradient>
+
+                <linearGradient id="soilEdge" x1="70" y1="170" x2="156" y2="214" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="rgba(0,0,0,0.08)"/>
+                  <stop offset="1" stop-color="rgba(0,0,0,0.14)"/>
+                </linearGradient>
+
+                <filter id="sproutSoftDepth" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="1" stdDeviation="1.05" flood-color="rgba(0,0,0,0.12)"/>
+                </filter>
+
+                <filter id="soilHiBlur" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="0.35"/>
+                </filter>
               </defs>
 
               <g filter="url(#sproutSoftDepth)">
-                <animateTransform attributeName="transform" type="rotate" values="-0.28 110 118; 0.28 110 118; -0.28 110 118" dur="7.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1" />
                 <path d="M110 172 C110 150,110 124,110 94" fill="none" stroke="url(#stemGrad)" stroke-width="9.0" stroke-linecap="round"/>
                 <path d="M110 172 C110 150,110 124,110 94" fill="none" stroke="rgba(255,255,255,0.09)" stroke-width="3.8" stroke-linecap="round" opacity="0.46"/>
 
                 <g>
-                  <animateTransform attributeName="transform" type="rotate" values="-0.35 110 94; 0.35 110 94; -0.35 110 94" dur="7.2s" begin="0.18s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"/>
-                  <animateTransform attributeName="transform" additive="sum" type="translate" values="0 0; 0 -0.35; 0 0.15; 0 0" dur="2.8s" begin="0.42s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.42;0.72;1" keySplines="0.22 1 0.36 1; 0.2 0 0.2 1; 0.22 1 0.36 1"/>
                   <path d="M110 94 C76 64,40 78,42 104 C66 128,96 126,110 94 Z" fill="url(#leafGradL)"/>
                   <path d="M110 94 C144 64,180 78,178 104 C154 128,124 126,110 94 Z" fill="url(#leafGradR)"/>
+
                   <path d="M86 94 C70 84,58 90,54 102" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="5" stroke-linecap="round"/>
                   <path d="M134 94 C150 84,162 90,166 102" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="5" stroke-linecap="round"/>
                 </g>
               </g>
 
-              <!-- ✅ 엔딩 흙이 줄기 밑을 3px 더 덮기 -->
-              <g transform="translate(0,-3)">
-                <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
-                  <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="url(#soilBase)"/>
+              <g transform="translate(110 188) scale(0.78,0.40) translate(-110 -188)">
+                <path id="soilShape" d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z"
+                  fill="url(#soilBase)"/>
+                <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z"
+                  fill="none" stroke="url(#soilEdge)" stroke-width="2.4" opacity="0.55" stroke-linejoin="round"/>
 
-                  <!-- ✅ 엔딩 흙 하이라이트: 두께/강도/오퍼시티 2단계↑ + 더 자연스럽게(2겹 레이어) -->
-                  <path d="M72 186 Q92 166 110 171 Q128 176 148 190"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.12)"
-                        stroke-width="4.8"
-                        stroke-linecap="round"
-                        opacity="0.58"/>
-                  <path d="M78 189 Q96 176 110 178 Q126 180 142 191"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.09)"
-                        stroke-width="3.8"
-                        stroke-linecap="round"
-                        opacity="0.40"/>
-
-                  <path d="M56 188 Q64 158 92 146 Q103 141 110 144 Q117 141 128 146 Q156 158 164 188 Q168 208 152 220 Q136 232 120 228 Q114 226 110 224 Q106 226 100 228 Q84 232 68 220 Q52 208 56 188 Z" fill="none" stroke="url(#soilEdge)" stroke-width="2.4" opacity="0.55" stroke-linejoin="round"/>
-                </g>
+                <path d="M82 176 Q102 162 124 168"
+                  fill="none"
+                  stroke="rgba(198,160,126,0.30)"
+                  stroke-width="6.2"
+                  stroke-linecap="round"
+                  opacity="0.65"
+                  filter="url(#soilHiBlur)"/>
               </g>
             </svg>
           </div>
@@ -526,16 +670,16 @@ box-shadow:
           <div class="ending-strip">
             <div class="ending-growline"></div>
             <div class="ending-text">
-              <div class="ending-line">오늘도 말씀을 마음에 심었어요</div>
-              <div class="ending-line" style="margin-top: 12px;">내일도 이어서 함께 암송해요</div>
+              <div class="ending-line">이 말씀이 또한 너희 믿는 자 가운데서 역사하느니라</div>
             </div>
           </div>
 
           <div class="ending-push"></div>
 
           <div class="ending-cta">
-            <button id="ending-home-btn" class="clickable-element ending-home-btn flex items-center justify-center">
-              <span>홈으로</span>
+            <!-- ✅ (수정3) 엔딩 홈으로 버튼: 추가 떠있는 shadow 적용 -->
+            <button id="ending-home-btn" class="clickable-element cta-float-shadow ending-home-btn clickable-action group glass-card px-12 py-5 rounded-[1.8rem] flex items-center justify-center text-center relative overflow-hidden list-item-shadow border-white/10" type="button">
+              <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">홈으로</span>
             </button>
           </div>
         </div>
@@ -557,6 +701,7 @@ box-shadow:
     let quiz = null;
 
     function performAction(element, callback) {
+      if (!element) return;
       if (element.classList.contains("is-pressing")) return;
       element.classList.add("is-pressing");
       setTimeout(() => {
@@ -593,18 +738,22 @@ box-shadow:
     }
 
     function initNavigation() {
+      /* ✅ (수정2) clickable-action은 data-next 있는 버튼만 처리 (홈으로 버튼은 별도 id 리스너가 담당) */
       document.querySelectorAll(".clickable-action").forEach(btn => {
         btn.addEventListener("click", function () {
           const next = this.getAttribute("data-next");
+          if (!next) return; /* ✅ data-next 없으면 아무 것도 안 함 */
           performAction(this, () => navigateTo(next));
         });
       });
+
       document.querySelectorAll(".nav-back").forEach(btn => {
         btn.addEventListener("click", function () {
           const to = this.getAttribute("data-to");
           if (to) performAction(this, () => navigateTo(to));
         });
       });
+
       const homeBtn = document.getElementById("ending-home-btn");
       if (homeBtn) {
         homeBtn.addEventListener("click", function(){
@@ -619,6 +768,7 @@ box-shadow:
       list.innerHTML = "";
       BIBLE_VERSES.forEach((verse, index) => {
         const card = document.createElement("button");
+        card.type = "button";
         card.className = "topic-card clickable-element w-full group glass-card p-6 rounded-[2.2rem] flex items-center justify-between text-left relative overflow-hidden list-item-shadow border-white/10";
         card.innerHTML = `
           <div class="flex items-center space-x-6 relative z-10 flex-1">
@@ -643,10 +793,10 @@ box-shadow:
 
     function renderStudy() {
       const study = document.getElementById("screen-study");
-      if (!study) return;
+      if (!study || !currentVerse) return;
       study.innerHTML = `
         <div class="mb-2">
-          <button class="nav-back clickable-element flex items-center space-x-1 text-mainFont/40 py-3 px-1" onclick="performAction(this, () => navigateTo('screen-topics'))">
+          <button class="nav-back clickable-element flex items-center space-x-1 text-mainFont/40 py-3 px-1" data-to="screen-topics" type="button">
             <i data-lucide="chevron-left" size="18"></i>
             <span class="text-[13px] font-sans font-bold tracking-widest">돌아가기</span>
           </button>
@@ -666,13 +816,22 @@ box-shadow:
         </div>
 
         <div class="mt-10 pb-8 w-full">
-          <button class="clickable-element w-full btn-primary py-5 rounded-[1.8rem] flex items-center justify-center"
-            onclick="performAction(this, () => { startQuiz(); navigateTo('screen-quiz'); })">
+          <button class="clickable-element w-full btn-primary py-5 rounded-[1.8rem] flex items-center justify-center" id="btn-start-quiz" type="button">
             <span class="text-[19px] font-classic font-bold text-mainFont tracking-tight">퀴즈 시작</span>
           </button>
         </div>
       `;
       lucide.createIcons();
+
+      const backBtn = study.querySelector(".nav-back");
+      if (backBtn) backBtn.addEventListener("click", function(){
+        performAction(this, () => navigateTo(this.getAttribute("data-to")));
+      });
+
+      const startBtn = document.getElementById("btn-start-quiz");
+      if (startBtn) startBtn.addEventListener("click", function(){
+        performAction(this, () => { startQuiz(); navigateTo("screen-quiz"); });
+      });
     }
 
     function startQuiz() {
@@ -811,7 +970,7 @@ box-shadow:
         ${choices.map((w, idx) => {
           const key = `c_${quiz.active}_${idx}_${w}`;
           const dim = quiz.dimmedWrong.has(key) ? "is-dimmed" : "";
-          return `<button class="choice-btn clickable-element ${dim}" data-choice="${escapeAttr(w)}" data-key="${escapeAttr(key)}">
+          return `<button class="choice-btn clickable-element ${dim}" data-choice="${escapeAttr(w)}" data-key="${escapeAttr(key)}" type="button">
             <span class="choice-label">${escapeHTML(w)}</span>
           </button>`;
         }).join("")}
