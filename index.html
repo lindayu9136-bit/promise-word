@@ -41,6 +41,64 @@
   </script>
 
   <style>
+    /* ===== Ending strip text refraction (NO card) ===== */
+.ending-refraction{
+  position: relative;
+  display: inline-block;
+  padding: 2px 10px;           /* 굴절 띠가 카드처럼 보이지 않게 “얇게” */
+  border-radius: 999px;
+  overflow: hidden;            /* 굴절이 텍스트 밖으로 삐져나오지 않게 */
+  isolation: isolate;          /* blend 안정화 */
+}
+
+/* 실제 굴절 띠(넓고, 더 블러) */
+.ending-refraction::after{
+  content:"";
+  position:absolute;
+  top: -60%;
+  left: -55%;
+  width: 210%;                 /* 너비 넓게 (굴절 존재감) */
+  height: 220%;
+  transform: translateX(-40%) rotate(10deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.00) 0%,
+    rgba(255,255,255,0.10) 30%,
+    rgba(255,255,255,0.22) 50%,
+    rgba(255,255,255,0.10) 70%,
+    rgba(255,255,255,0.00) 100%
+  );
+  filter: blur(18px);          /* 가장자리 선명함 해결: 블러 ↑ */
+  opacity: 0.70;
+  mix-blend-mode: soft-light;
+  pointer-events:none;
+  z-index: 0;
+  animation: endingGlassSweep 7.2s ease-in-out infinite; /* 느리게 */
+}
+
+/* 미세한 디테일(아주 약하게) */
+.ending-refraction::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  background: radial-gradient(120px 22px at 15% 50%, rgba(255,255,255,0.10), transparent 60%);
+  opacity: 0.35;
+  filter: blur(10px);
+  pointer-events:none;
+  z-index: 0;
+}
+
+.ending-refraction > *{
+  position: relative;
+  z-index: 1;                  /* 텍스트가 항상 위 */
+}
+
+@keyframes endingGlassSweep{
+  0%   { transform: translateX(-55%) rotate(10deg); }
+  45%  { transform: translateX(10%)  rotate(10deg); }
+  100% { transform: translateX(70%)  rotate(10deg); }
+}
+
     :root{
       --themeBg:#a595c8;
       --mainFont:#3d2b29;
@@ -395,6 +453,10 @@
       line-height: 1.5;
       text-shadow: 0 1px 2px rgba(255,255,255,0.25);
 
+/* =========================
+   TEXT GLASS SWEEP (WIDE + SOFT)
+   - transform ❌ (기존 엔딩 등장 애니메이션과 충돌 방지)
+   ========================= */
     }
     .ending-line{
       white-space: nowrap;
@@ -482,6 +544,51 @@
     #screen-ending.ending-enter .ending-radial{ opacity:1; transform: translate(-50%, -50%) translate(var(--endingRadialX), var(--endingRadialY)); transition-delay: 0ms; }
     #screen-ending.ending-enter .ending-glow{ opacity:1; transform: translate(-50%, -50%) translate(var(--endingGlowX), var(--endingGlowY)); transition-delay: 0ms; }
     #screen-ending.ending-enter .ending-cta{ opacity:1; transform: translateY(0); transition-delay: 520ms; }
+
+/* 텍스트 굴절 스윕 (최종) */
+.ending-refraction{
+  position: relative;
+  display: inline-block;
+  padding: 0.18em 0.65em;
+  border-radius: 999px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ending-refraction::after{
+  content:"";
+  position:absolute;
+  top: -60%;
+  left: -40%;
+  width: 90%;
+  height: 220%;
+  pointer-events:none;
+  z-index: 1;
+
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0.00) 0%,
+    rgba(255,255,255,0.12) 18%,
+    rgba(255,255,255,0.16) 33%,
+    rgba(255,255,255,0.12) 48%,
+    rgba(255,255,255,0.00) 65%
+  );
+
+  filter: blur(40px);
+  opacity: 0.75;
+  transform: translateX(-120%) rotate(10deg);
+  animation: endingRefSweep 5.0s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes endingRefSweep{
+  0%   { transform: translateX(-120%) rotate(10deg); opacity: 0; }
+  15%  { opacity: 0.7; }
+  45%  { opacity: 0.85; }
+  65%  { opacity: 0.3; }
+  100% { transform: translateX(260%) rotate(10deg); opacity: 0; }
+}
+
   </style>
 <script type="importmap">
 {
@@ -670,7 +777,7 @@
           <div class="ending-strip">
             <div class="ending-growline"></div>
             <div class="ending-text">
-              <div class="ending-line">이 말씀이 또한 너희 믿는 자 가운데서 역사하느니라</div>
+            <div class="ending-line ending-refraction">이 말씀이 또한 너희 믿는 자 가운데서 역사하느니라</div>
             </div>
           </div>
 
